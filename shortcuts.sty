@@ -1,0 +1,151 @@
+\usepackage[usenames,dvipsnames]{color}
+
+% Any additional packages needed should be included after jmlr2e.
+% Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
+% and defines many common macros, such as 'proof' and 'example'.
+%
+% It also sets the bibliographystyle to plainnat; for more information on
+% natbib citation styles, see the natbib documentation, a copy of which
+% is archived at http://www.jmlr.org/format/natbib.pdf
+
+\usepackage{jmlr2e}
+\usepackage{subfig}
+\usepackage[titlenumbered,linesnumbered,ruled,vlined]{algorithm2e}
+
+\usepackage{hyperref}
+\hypersetup{hypertex=true,
+            colorlinks=true,
+            linkcolor=blue,
+            anchorcolor=blue,
+            citecolor=blue}
+
+% Definitions of handy macros can go here
+
+\newcommand{\dataset}{{\cal D}}
+\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+
+% \newtheorem{solution}[theorem]{Solution}
+\newenvironment{solution}{\par\noindent{\bf Solution\ }}{\hfill\BlackBox\\[2mm]}
+\newtheorem{problem}[theorem]{Problem}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{epstopdf}
+\usepackage{tabularx, multirow, booktabs, footnote}
+\newtheorem{propose}{Proposition}
+\newtheorem{condition}{Condition}
+\newcommand{\pr}{\mathrm{pr}}
+\newcommand{\aphi}{\phi}
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\argmax}{\mathrm{argmax}}
+\newcommand{\ba}{\mbox{\bf a}}
+\newcommand{\bb}{\mbox{\bf b}}
+\newcommand{\be}{\mbox{\bf e}}
+\newcommand{\bff}{\mbox{\bf f}}
+\newcommand{\bg}{\mbox{\bf g}}
+\newcommand{\bh}{\mbox{\bf h}}
+\newcommand{\br}{\mbox{\bf r}}
+\newcommand{\bu}{\mbox{\bf u}}
+\newcommand{\bv}{\mbox{\bf v}}
+\newcommand{\bw}{\mbox{\bf w}}
+\newcommand{\bx}{\mbox{\bf x}}
+\newcommand{\by}{\mbox{\bf y}}
+\newcommand{\bz}{\mbox{\bf z}}
+\newcommand{\bA}{\mbox{\bf A}}
+\newcommand{\bB}{\mbox{\bf B}}
+\newcommand{\bC}{\mbox{\bf C}}
+\newcommand{\bD}{\mbox{\bf D}}
+\newcommand{\bE}{\mbox{\bf E}}
+\newcommand{\bF}{\mbox{\bf F}}
+\newcommand{\bG}{\mbox{\bf G}}
+\newcommand{\bH}{\mbox{\bf H}}
+\newcommand{\bI}{\mbox{\bf I}}
+\newcommand{\bL}{\mbox{\bf L}}
+\newcommand{\bQ}{\mbox{\bf Q}}
+\newcommand{\bR}{\mbox{\bf R}}
+\newcommand{\bS}{\mbox{\bf S}}
+\newcommand{\bU}{\mbox{\bf U}}
+\newcommand{\bV}{\mbox{\bf V}}
+\newcommand{\bP}{\mbox{\bf P}}
+\newcommand{\bW}{\mbox{\bf W}}
+\newcommand{\bX}{\mbox{\bf X}}
+\newcommand{\bXM}{\mbox{\bf X}_{\widehat{\mathcal{M}}}}
+\newcommand{\bY}{\mbox{\bf Y}}
+\newcommand{\bZ}{\mbox{\bf Z}}
+\newcommand{\bone}{\mbox{\bf 1}}
+\newcommand{\bzero}{\mbox{\bf 0}}
+\newcommand{\bvep}{\mbox{\boldmath $\varepsilon$}}
+\newcommand{\balpha}{\mbox{\boldmath $\alpha$}}
+\newcommand{\bbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bdelta}{\mbox{\boldmath $\delta$}}
+\newcommand{\btheta}{\mbox{\boldmath $\theta$}}
+\newcommand{\bgamma}{\mbox{\boldmath $\gamma$}}
+\newcommand{\bGamma}{\mbox{\boldmath $\Gamma$}}
+\newcommand{\bDelta}{\mbox{\boldmath $\Delta$}}
+\newcommand{\bPsi}{\mbox{\boldmath $\Psi$}}
+\newcommand{\bet}{\mbox{\boldmath $\eta$}}
+\newcommand{\bxi}{\mbox{\boldmath $\xi$}}
+\newcommand{\bleta}{\mbox{\boldmath $\eta$}}
+\newcommand{\bvarphi}{\mbox{\boldmath $\varphi$}}
+\newcommand{\bmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bzeta}{\mbox{\boldmath $\zeta$}}
+\newcommand{\bomega}{\mbox{\boldmath $\omega$}}
+\newcommand{\bSig}{\mbox{\boldmath $\Sigma$}}
+\newcommand{\loss} {\mathcal{L}}
+\DeclareMathOperator*{\prob}{\mathbb{P}}
+\newcommand{\hv}{\widehat \bv}
+\newcommand{\hu}{\widehat \bu}
+\newcommand{\hC}{\widehat \bC}
+\newcommand{\hsig}{\widehat \sigma}
+\newcommand{\hB}{\widehat \bB}
+\newcommand{\hE}{\widehat \bE}
+\newcommand{\hvar}{\widehat \var}
+\newcommand{\hcov}{\widehat \cov}
+\newcommand{\hbveps}{\widehat\bveps}
+\newcommand{\hbbeta}{\widehat\bbeta}
+\newcommand{\tbbeta}{\widetilde\bbeta}
+\newcommand{\tbeta}{\widetilde\beta}
+\newcommand{\hdelta}{\hat{\delta}}
+\newcommand{\hbgamma}{\widehat\bgamma}
+\newcommand{\hbtheta}{\widehat\btheta}
+\newcommand{\hbeta}{\widehat{\beta}}
+\newcommand{\hSig}{\widehat\Sig}
+\newcommand{\hmu}{\widehat\bmu}
+\newcommand{\hxi}{\widehat\bxi}
+\newcommand{\tSig}{\widetilde\Sig}
+\newcommand{\heq}{\ \widehat=\ }
+\newcommand{\sam}{_{\text{sam}}}
+\newcommand{\calA}{{\cal A}}
+\newcommand{\sbbeta}{\mbox{\scriptsize \boldmath $\beta$}}
+\newcommand{\sbdelta}{\mbox{\scriptsize \boldmath $\delta$}}
+\newcommand{\sM}{{\scriptsize \cal M}}
+\newcommand{\sA}{{\scriptsize \cal A}}
+\newcommand{\Btau}{{{\cal B}_\tau}}
+\newcommand{\tp}{^{T}}
+\newcommand{\std}{\mathrm{std}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\corr}{\mathrm{corr}}
+\newcommand{\Sig}{\mathbf{\Sigma}}
+\newcommand{\veps}{\varepsilon}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\vecc}{\mathrm{vec}}
+\newcommand{\vech}{\mathrm{vech}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\supp}{\mathrm{supp}}
+\newcommand{\spark}{\mathrm{spark}}
+\newcommand{\op}{o_P}
+\newcommand{\FS}{\text{FS}}
+
+\def\etal{\textit{et al.} }
+\def\t{^T}
+\def\toD{\overset{\mathscr{D}}{\longrightarrow}}
+\def\toP{\overset{\mathrm{P}}{\longrightarrow}}
+\def\toas{\overset{\mathrm{a.s.}}{\longrightarrow}}
+\def\deq{\overset{\mathrm{(d)}}{=\hspace{-0.02 in}=}}
+\def\sumno{\sum\nolimits}
+
+\newcommand{\CI}{\mathrel{\text{\scalebox{1.07}{$\perp\mkern-10mu\perp$}}}} % conditional independence
