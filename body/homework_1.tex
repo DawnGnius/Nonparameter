@@ -3,27 +3,26 @@
 \end{problem}
 
 \begin{solution}
-% We have $F_n=\frac{1}{n} \sum_{i=1}^n I(X_i \le x)$, and $F_n \sim \frac{1}{n} Binomial(n, F(x))$.
-% By CLT, we get $\frac{n F_n(x)- nF(x)}{\sqrt{n}\sqrt{nF(x)(1-F(x))}}=\frac{F_n(x)- F(x)}{\sqrt(F(x)(1-F(x)))} \leadsto N(0,1)$.
+We have $F_n=\frac{1}{n} \sum_{i=1}^n I(X_i \le x)$, and $F_n \sim \frac{1}{n} Binomial(n, F(x))$.
+By CLT, we get $\frac{n F_n(x)- nF(x)}{\sqrt{n}\sqrt{nF(x)(1-F(x))}}=\frac{F_n(x)- F(x)}{\sqrt(F(x)(1-F(x)))} \leadsto N(0,1)$.
+Thus, $F_n \leadsto N(F(x), F(x)(1-F(x)))$. Finally, we get $\sqrt{F_n} \leadsto ?$
 
-% Thus, $F_n \leadsto N(F(x), F(x)(1-F(x)))$. Finally, we get $\sqrt{F_n} \leadsto ?$
+% Let $T(F)=\sqrt{F}$, we know that $T$ is Hadamard differentiable with respect to $G=\delta_x$. 
+% Then
+% \begin{equation*}
+%     \frac{\sqrt{n} (T (F_n) - T(F))}{\hat{\tau}} \leadsto N(0, 1)
+% \end{equation*}
+% where $\hat{\tau}^2=\frac{1}{n}\sum_{i=1}^n \hat{L}^2(X_i)$ and
+% \begin{equation*}
+%     \frac{d}{dt}T(F_t) \Big|_{t=0} 
+%     = \frac{d}{dt} \sqrt{F_t} 
+%     = \frac{d}{dt} \sqrt{(1-t)F+t\delta_x}
+%     =  - \sqrt{F}.
+% \end{equation*}
 
-Let $T(F)=\sqrt{F}$, we know that $T$ is Hadamard differentiable with respect to $G=\delta_x$. 
-Then
-\begin{equation*}
-    \frac{\sqrt{n} (T (F_n) - T(F))}{\hat{\tau}} \leadsto N(0, 1)
-\end{equation*}
-where $\hat{\tau}^2=\frac{1}{n}\sum_{i=1}^n \hat{L}^2(X_i)$ and
-\begin{equation*}
-    \frac{d}{dt}T(F_t) \Big|_{t=0} 
-    = \frac{d}{dt} \sqrt{F_t} 
-    = \frac{d}{dt} \sqrt{(1-t)F+t\delta_x}
-    =  - \sqrt{F}.
-\end{equation*}
+% So, $\hat{\tau} = \sqrt{\frac{1}{n}\sum_{i=1}^n F_n(X_i)} $.
 
-So, $\hat{\tau} = \sqrt{\frac{1}{n}\sum_{i=1}^n F_n(X_i)} $.
-
-Thus, $ T (F_n)  \leadsto N(\sqrt{F}, \frac{1}{n^2}\sum_{i=1}^n F_n(X_i))$
+% Thus, $ T (F_n)  \leadsto N(\sqrt{F}, \frac{1}{n^2}\sum_{i=1}^n F_n(X_i))$
 
 \end{solution}
 
@@ -34,7 +33,33 @@ Thus, $ T (F_n)  \leadsto N(\sqrt{F}, \frac{1}{n^2}\sum_{i=1}^n F_n(X_i))$
 \begin{problem}
     Let $x$, $y$ be two distinct real numbers, find $Cov(F_n(x),F_n(y))$, where $ F_n $ be the empirical distribution function. 
 \end{problem}
+\begin{solution}
+    Assume that $x<y$. 
+    We have $F_n (x)=\frac{1}{n} \sum_{i=1}^n I(X_i \le x)$, and $F_n (x)\sim \frac{1}{n} Binomial(n, F(x))$.
+    This gives
+    \begin{equation*}
+        \begin{split}
+            Cov(F_n(x),F_n(y)) & = E[F_n (x)-E(F_n (x))][F_n (y)-E(F_n (y))] \\
+            % & = E[F_n (x)-F(x)][F_n (y)-F(y)] \\
+            & = E[F_n (x) F_n (y)] - E[F_n(x)]E[F_n(y)] \\
+            % & = E\left[ \sum_{i=1}^n I(X_i\le x) \sum_{i=1}^n I(X_i\le y) \right] - F(x)F(y) \\
+        \end{split}
+    \end{equation*} 
+    where 
+    \begin{equation*}
+        \begin{split}
+            n^2 E[F_n (x) F_n (y)] & = E\left[ \sum_{i=1}^n I(X_i\le x) \sum_{j=1}^n I(X_j\le y) \right] \\
+            & = E\left[  \sum_{i=1}^n \sum_{j=1}^n  I(X_i\le x) I(X_j\le y) \right] \\
+            & = \sum_{i=1}^n \sum_{j=1}^n E\left[ I(X_i\le x) I(X_j\le y) \right] \\
+            & = \sum_{i=1}^n E\left[ I(X_i\le x)I(X_i\le y) \right] + \sum_{i,j=1; i\neq j}^n  E\left[ I(X_i\le x)\right]  E\left[ I(X_j\le y)\right] \\
+            & = n F(x) +  n(n-1)F(x)F(y) 
+        \end{split} 
+    \end{equation*}
+    and 
+    $E[F_n(x)]E[F_n(y)] = F(x)F(y)$.
 
+    Thus, $Cov(F_n(x),F_n(y)) = \frac{F(x) +  (n-1)F(x)F(y)}{n} - F(x)F(y) =\frac{F(x) - F(x)F(y)}{n}  $
+\end{solution}
 
 
 
@@ -45,7 +70,19 @@ Thus, $ T (F_n)  \leadsto N(\sqrt{F}, \frac{1}{n^2}\sum_{i=1}^n F_n(X_i))$
         P(F(X_{(n)})-F(X_{(1)})>\beta)=1-n\beta^{n-1}+(n-1)\beta^n.
     \end{equation*}
 \end{problem}
-
+\begin{solution}
+    We have  $\mathbf{P} \left(F(X_{(n)}) \le x, F(X_{(1)}) \le y \right) =x^n \left(1-(1-y)^n \right)$ which leads to the joint probability density of $F(X_{(n)})$ and $F(X_{(1)})$, 
+    $f_{F(X_{(n)}), F(X_{(1)})} (x,y) = \frac{\partial}{\partial x \partial y} x^n \left(1-(1-y)^n \right) = n^2 x^{n-1} (1-y)^{n-1}$. 
+    
+    Thus, $\mathbf{P}( F(X_{(n)})-F(X_{(1)})>\beta ) 
+    = \int_{x-y>\beta} f_{F(X_{(n)}), F(X_{(1)})} (x,y) dxdy 
+    = \int_0^{1-\beta} \int_{y+\beta}^1 n^2 x^{n-1} (1-y)^{n-1} dy dx 
+    = \int_0^{1-\beta} (1-(y-\beta)^n) (1-y)^{n-1} dy 
+    = 1-\beta^n - \int_0^{1-\beta} (y+\beta)^n (1-y)^{n-1} dy 
+    = $
+    
+    $F(X_{(n)} $
+\end{solution}
 
 
 
