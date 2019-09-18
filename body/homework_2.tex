@@ -1,0 +1,112 @@
+\begin{problem}
+    Let $X_1,\ldots,X_n~iid\sim F$, $F_n$ be the empirical distribution function and $a<b$ be fixed real numbers, Let $\theta=T(F)=F(b)-F(a)$.  
+
+    (1) Find $\theta$'s plug-in estimator $\hat\theta$;
+
+    (2) Find the influence function and empirical influence function of $\theta$;
+
+    (3) Estimate the standard error for $\hat\theta$;
+
+    (4) Find an expression for an approximate $1-\alpha$ confidence interval for $\theta$. 
+\end{problem}
+
+\begin{solution}
+    (1) $\theta = T(F) = F(b) - F(a) = \int I(a < x \le b) dF(x)$.
+
+    The plug-in estimator is $\hat{\theta} =  \int I(a < x \le b) d F_n(x) = \frac{1}{n}\sum_{i=1}^n I(a < X_i \le b)$.
+
+    (2) $\theta$ is a linear functional. Thus the influence function if $L_F(x) = I(a < x \le b) - T(F)$ and the empirical influence function is  $\hat{L}_F(x) = I(a < x \le b) - T(F_n)$.
+
+    (3) Denote the standard error of $\hat{\theta}$ by  $\widehat{\textbf{se}}$. 
+
+    \small{\emph{Note that, it cannot be obtained by doing some direct calculations. Because $\mathbb{V}\left(\sum_{i=1}^n I(a < X_i \le b)\right) = \sum_{i=1}^n \mathbb{V} (I(a < X_i \le b)) = n \times (F(b)-F(a)) \times (1-F(b)+F(a))$ is still undetermined. So we shell use influence function to get estimator of variance.}}
+    
+    \begin{equation*}
+        \hat{\tau}^2 = \frac{1}{n} \sum_{i=1}^n \hat{L}^2 (X_i) =  \frac{1}{n} \sum_{i=1}^n \left(I(a < X_i \le b) -  \frac{1}{n}\sum_{j=1}^n I(a < X_j \le b) \right)^2 .
+    \end{equation*}
+    Then $\widehat{\textbf{se}} = \hat{\tau}/\sqrt{n}$, according to Theorem 2.22 in \citet{Wasserman2006All}.
+
+    (4) Using Theorem 2.22 in \citet{Wasserman2006All}, we have 
+    \begin{equation*}
+        \frac{\sqrt{n} ( T(F) - F(F_n))}{\hat{\tau}} \leadsto N(0, 1).
+    \end{equation*}
+    
+    Thus, a $1-\alpha$, pointwise asymptotic confidence interval for $\theta = T(F)$ is
+    \begin{equation*}
+        T(F_n) \pm z_{\alpha/2} \widehat{\textbf{se}} ,
+    \end{equation*}
+    where $\widehat{\textbf{se}}$ is calculated in (3).
+\end{solution}
+
+
+
+
+\begin{problem}
+    Let $b(\epsilon)=\sup_x|T(F)-T(F_\epsilon)|$, $F_\epsilon=(1-\epsilon)F+\epsilon\delta_x$. A breakdown point of estimator $\epsilon^*$ is definded as $\epsilon^*=\inf\{\epsilon> 0: b(\epsilon)=\infty\}$. Find
+
+    (1) Breakdown point of mean;
+
+    (2) Breakdown point of median. 
+\end{problem}
+
+\begin{solution}
+    (1) 
+    Firstly, we analyze the problem from a mathematical point of view. 
+    Let $T = T(F) = \int x dF$. 
+    Then $T(F) - T(F_\epsilon) = \int x d (F - F_\epsilon) = \int x d (\epsilon F - \epsilon\delta_x) =  \epsilon T(F) - \epsilon x $.
+    So $\sup_x|T(F)-T(F_\epsilon)| = \sup_x \epsilon  | T(F) - x | = \epsilon  \sup_x | T(F) - x | $ . 
+    
+    We have that, $\forall \epsilon >0 $, $\sup_x|T(F)-T(F_\epsilon)| = \infty$. 
+    Thus $\epsilon^* = 0$.
+
+    Then, intuitively\citep{Charles2006}, it is obvious from the formula from the mean 
+    \begin{equation*}
+        \frac{x_1 + \dots + x_n}{n}
+    \end{equation*}
+    that if we hold $x_1,\dots, x_{n-1}$ fixed and let $x_n$ go to infinity, the sample mean also goes to infinity. 
+    In short  even one gross outlier ruins the sample mean. The finite sample breakdown point is $1/n$. The asymptotic breakdown point is zero.
+
+    (2) Let $T = T(F) = F^{-1}(1/2) = \inf\{\mu | F(\mu) \ge 1/2 \}$. 
+    We have 
+    \begin{equation*}
+        \begin{split}
+            T(F_\epsilon) =  & F^{-1}_\epsilon (1/2) = \inf \left\{ \mu | (1-\epsilon)F(\mu) + \epsilon \delta_x(\mu) \ge 1/2 \right\} \\
+            & = \left\{
+            \begin{split}
+                F^{-1} (1/2(1-\epsilon)) , \quad & x > F^{-1} (1/2(1-\epsilon))\\
+                x, \quad &  F^{-1} ((1/2 - \epsilon)/(1-\epsilon)) < x \le F^{-1} (1/2(1-\epsilon))\\
+                F^{-1} ((1/2 - \epsilon)/(1-\epsilon)) , \quad & x \le F^{-1} ((1/2 - \epsilon)/(1-\epsilon))\\
+            \end{split}    
+            \right.
+        \end{split}
+    \end{equation*}
+    So $\sup_x|T(F)-T(F_\epsilon)| = \infty$ when $\epsilon=1/2$. Thus $\epsilon^* = 1/2$.
+
+Intuitively\citep{Charles2006}, if we have n data points and we let a minority of them $\text{floor}((n - 1)/2)$ go to infinity leaving the rest fixed, the ``floor'' operation means largest integer less than or equal to, then the median stays with the majority. The median changes, but does not become arbitrarily bad. The finite sample breakdown point is $\text{floor}((n - 1)/2n)$. The asymptotic breakdown point is one-half.
+\end{solution}
+
+\begin{problem}
+    Let $X$ be positive random variable with distribution function $F$, let $\theta = \int log(x) d F(x)$, $\lambda = log (\mu), \mu = EX$. 
+
+    (1) Find the influence function and empirical influence function of $\theta,\lambda$;
+
+    (2) Do $\hat\theta,\hat\lambda$ have the same limiting distribution?
+
+    (3) Who is more robust to outliers in $\hat\theta$ and $\hat\lambda$?
+\end{problem}
+
+\begin{solution}
+    (1) $\theta = T_1(F) = \int log(x) d F(x)$ is a linear functional, so the influence function is $\text{IF}_\theta = log(x) - T_1(F)$.
+
+    $\lambda = T_2(F) = log(\int x dF)$ is not a linear functional. So 
+    \begin{equation*}
+        \begin{split}
+            \text{IF}_\lambda & = \lim_{\epsilon\to0} \frac{T_2((1-\epsilon)F + \epsilon \delta_x) - T_2(F)}{\epsilon} \\
+            & = \lim_{\epsilon\to0}  \frac{log(\int x d ((1-\epsilon)F + \epsilon \delta_x) - log(\int x dF)}{\epsilon} \\
+            & = \lim_{\epsilon\to0}  \frac{log \left( \epsilon  x /\int x dF + 1-\epsilon \right)}{\epsilon} \\
+        \end{split}
+    \end{equation*}
+
+\end{solution}
+
+
