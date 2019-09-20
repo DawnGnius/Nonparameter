@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex main"] 1568970476 "main.aux" "main.bbl" "main" 1568973614
+["bibtex main"] 1568970476 "main.aux" "main.bbl" "main" 1568974014
   "C:/Program Files/CTEX/UserData/bibtex/bst/natbib/plainnat.bst" 1284455456 26816 ffe5423d2019860bad9f54bc402fac15 ""
   "library2.bib" 1568968644 291 4d4155d23f78c138df6f40c71a0dfd88 ""
-  "main.aux" 1568973560 968 faa44948ae021e6222c6cfaf5a200092 "pdflatex"
+  "main.aux" 1568973996 968 faa44948ae021e6222c6cfaf5a200092 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1568973558 "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.tex" "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.pdf" "main" 1568973614
+["pdflatex"] 1568973994 "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.tex" "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.pdf" "main" 1568974014
   "C:/Program Files/CTEX/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
   "C:/Program Files/CTEX/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1233951848 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
   "C:/Program Files/CTEX/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1233951854 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -103,20 +103,20 @@
   "C:/Program Files/CTEX/UserData/tex/latex/relsize/relsize.sty" 1365244030 15542 c4cc3164fe24f2f2fbb06eb71b1da4c4 ""
   "C:/Program Files/CTEX/UserData/tex/latex/subfig/subfig.sty" 1121255810 22049 9ef165ca6df8815c92e693146a376c92 ""
   "C:/Program Files/CTEX/UserData/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "body/homework_2.tex" 1568973613 7955 a52cebf80cf8a1b751eba639d654a2dd ""
+  "body/homework_2.tex" 1568974013 8058 8cfe7e2a1ebca1fb935049b0f51c3c02 ""
   "body/title.tex" 1568968644 325 8354bb8bb2dc2f458f3bdecf3fb50af3 ""
-  "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.aux" 1568973560 968 faa44948ae021e6222c6cfaf5a200092 ""
+  "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.aux" 1568973996 968 faa44948ae021e6222c6cfaf5a200092 ""
   "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.tex" 1568968644 222 9696d05dd1bc9f64c384f88288355a7b ""
   "jmlr2e.sty" 1568968644 13331 03f702df66288a4085b7f9221f9daf72 ""
-  "main.aux" 1568973560 968 faa44948ae021e6222c6cfaf5a200092 "pdflatex"
+  "main.aux" 1568973996 968 faa44948ae021e6222c6cfaf5a200092 "pdflatex"
   "main.bbl" 1568970477 597 b5c5275ff24c87ce49efd659699b72b8 "bibtex main"
-  "main.out" 1568973559 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.out" 1568973996 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   "main.tex" 1568968644 222 9696d05dd1bc9f64c384f88288355a7b ""
   "shortcuts.sty" 1568968644 5520 3cde1c705838aee51072520602204907 ""
   (generated)
-  "main.out"
-  "main.log"
+  "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.log"
   "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.pdf"
   "main.pdf"
-  "c:/Users/Gnius/Documents/Code/Latex/Nonparameter/main.log"
+  "main.log"
+  "main.out"
   "main.aux"
