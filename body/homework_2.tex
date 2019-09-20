@@ -85,8 +85,12 @@
 Intuitively\citep{Charles2006}, if we have n data points and we let a minority of them $\text{floor}((n - 1)/2)$ go to infinity leaving the rest fixed, the ``floor'' operation means largest integer less than or equal to, then the median stays with the majority. The median changes, but does not become arbitrarily bad. The finite sample breakdown point is $\text{floor}((n - 1)/2n)$. The asymptotic breakdown point is one-half.
 \end{solution}
 
+
+
+
+
 \begin{problem}
-    Let $X$ be positive random variable with distribution function $F$, let $\theta = \int log(x) d F(x)$, $\lambda = log (\mu), \mu = EX$. 
+    Let $X$ be positive random variable with distribution function $F$ and let $\theta = \int log(x) d F(x)$, $\lambda = log (\mu), \mu = EX$. 
 
     (1) Find the influence function and empirical influence function of $\theta,\lambda$;
 
@@ -96,16 +100,70 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
 \end{problem}
 
 \begin{solution}
-    (1) $\theta = T_1(F) = \int log(x) d F(x)$ is a linear functional, so the influence function is $\text{IF}_\theta = log(x) - T_1(F)$.
+    (1) $\theta = T_\theta(F) = \int log(x) d F(x)$ is a linear functional, so the influence function is $\text{IF}_\theta = log(x) - T_\theta(F)$.
 
-    $\lambda = T_2(F) = log(\int x dF)$ is not a linear functional. So 
+    $\lambda = T_\lambda(F) = log(\int x dF)$ is not a linear functional. So 
     \begin{equation*}
         \begin{split}
-            \text{IF}_\lambda & = \lim_{\epsilon\to0} \frac{T_2((1-\epsilon)F + \epsilon \delta_x) - T_2(F)}{\epsilon} \\
+            \text{IF}_\lambda & = \lim_{\epsilon\to0} \frac{T_\lambda((1-\epsilon)F + \epsilon \delta_x) - T_\lambda(F)}{\epsilon} \\
             & = \lim_{\epsilon\to0}  \frac{log(\int x d ((1-\epsilon)F + \epsilon \delta_x) - log(\int x dF)}{\epsilon} \\
             & = \lim_{\epsilon\to0}  \frac{log \left( \epsilon  x /\int x dF + 1-\epsilon \right)}{\epsilon} \\
+            & = \frac{x}{\int x dF} - 1
         \end{split}
     \end{equation*}
+
+    (2) $\hat{\theta} = T_\theta(\hat{F}_n(x))$ and $\hat{\lambda} = T_\lambda(\hat{F}_n(x))$ are plug-in estimators of $\theta$ and $\lambda$ respectively. 
+    First, we consider $\hat{\theta}$. 
+    We have
+    \begin{equation*}
+        % \frac{\sqrt{n} (T_\theta - T(\hat{F_n}))}{\hat{\tau}} \leadsto N(0, 1)
+        \sqrt{n} (T_\theta - T_\theta(\hat{F_n})) \leadsto N(0, \tau_\theta^2)
+    \end{equation*}
+    where $\tau_\theta^2 = \int \text{IF}_\theta(x) d F(x)$. 
+    % where
+    % \begin{equation*}
+    %     \hat{\tau}_\theta = \frac{1}{n} \sum_{i=1}^n \hat{L}^2(X_i)
+    %     = \frac{1}{n} \sum_{i=1}^n (log(X_i) - T_\theta(\hat{F_n}))^2
+    % \end{equation*}
+    The limiting distribution of $\hat{\theta}$ is $N(T_\theta, \tau_\theta^2/n)$
+
+    Then, for $\hat{\lambda}$,
+    \begin{equation*}
+        \sqrt{n} (T_\lambda - T_\lambda(\hat{F_n})) \leadsto N(0, \tau_\lambda^2)
+    \end{equation*}
+    where $\tau_\lambda^2 = \int \text{IF}_\lambda(x) d F(x)$. 
+    The limiting distribution of $\hat{\lambda}$ is $N(T_\lambda, \tau_\lambda^2/n)$
+    
+    They are different.
+
+    (3) We need to consider the breakdown points of those two estimators.
+    
+    For $\hat{\theta}$, 
+    \begin{equation*}
+        T_\theta(F) - T_\theta(F_\epsilon) = \int log(x) d \epsilon (F -\delta_x)
+        = \epsilon (T_theta - log(x)).
+    \end{equation*}
+    Then
+    \begin{equation*}
+        \sup_x | T_\theta(F) - T_\theta(F_\epsilon) | = \epsilon |T_\theta - log(x)|
+    \end{equation*}
+
+    Thus, breakdown point $\epsilon^* = 0$.
+
+    For $\hat{\lambda}$, 
+    \begin{equation*}
+        T_\lambda(F) - T_\lambda(F_\epsilon) = log( \int x d F ) - log( \int x d( (1-\epsilon)F + \epsilon \delta_x))
+        % = log( \frac{ \int x d F}{\int x d( (1-\epsilon)F + \epsilon \delta_x)})
+        = log(\frac{\mu}{(1-\epsilon)\mu + \epsilon x})
+    \end{equation*}
+    Then
+    \begin{equation*}
+        \sup_x | T_\lambda(F) - T_\lambda(F_\epsilon) | 
+        =  \infty,
+        \quad \text{when } x = \frac{(\epsilon - 1)\mu}{\epsilon}
+    \end{equation*}
+
+    Thus, breakdown point $\epsilon^* = 0$.
 
 \end{solution}
 
