@@ -15,14 +15,14 @@
 
     The plug-in estimator is $\hat{\theta} =  \int I(a < x \le b) d F_n(x) = \frac{1}{n}\sum_{i=1}^n I(a < X_i \le b)$.
 
-    (2) $\theta$ is a linear functional. Thus the influence function if $L_F(x) = I(a < x \le b) - T(F)$ and the empirical influence function is  $\hat{L}_F(x) = I(a < x \le b) - T(F_n)$.
+    (2) $\theta$ is a linear functional. Thus the influence function is $\text{IF}(x) = I(a < x \le b) - T(F)$ and the empirical influence function is  $\widehat{\text{IF}}(x) = I(a < x \le b) - T(F_n)$.
 
-    (3) Denote the standard error of $\hat{\theta}$ by  $\widehat{\textbf{se}}$. 
+    (3) Denote the estimated standard error of $\hat{\theta}$ by  $\widehat{\textbf{se}}$. 
 
-    \small{\emph{Note that, it cannot be obtained by doing some direct calculations. Because $\mathbb{V}\left(\sum_{i=1}^n I(a < X_i \le b)\right) = \sum_{i=1}^n \mathbb{V} (I(a < X_i \le b)) = n \times (F(b)-F(a)) \times (1-F(b)+F(a))$ is still undetermined. So we shell use influence function to get estimator of variance.}}
+    \small{\emph{Note that, it cannot be obtained by doing some direct calculations. Because $\mathbb{V} \left( \sum_{i=1}^n I(a < X_i \le b) \right) = \sum_{i=1}^n \mathbb{V} (I(a < X_i \le b)) = n \times (F(b)-F(a)) \times (1-F(b)+F(a))$ is still undetermined. So we shell use influence function to get estimation of variance.}}
     
     \begin{equation*}
-        \hat{\tau}^2 = \frac{1}{n} \sum_{i=1}^n \hat{L}^2 (X_i) =  \frac{1}{n} \sum_{i=1}^n \left(I(a < X_i \le b) -  \frac{1}{n}\sum_{j=1}^n I(a < X_j \le b) \right)^2 .
+        \hat{\tau}^2 = \frac{1}{n} \sum_{i=1}^n \widehat{\text{IF}}^2 (X_i) =  \frac{1}{n} \sum_{i=1}^n \left(I(a < X_i \le b) -  \frac{1}{n}\sum_{j=1}^n I(a < X_j \le b) \right)^2 .
     \end{equation*}
     Then $\widehat{\textbf{se}} = \hat{\tau}/\sqrt{n}$, according to Theorem 2.22 in \citet{Wasserman2006All}.
 
@@ -100,7 +100,7 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
 \end{problem}
 
 \begin{solution}
-    (1) $\theta = T_\theta(F) = \int log(x) d F(x)$ is a linear functional, so the influence function is $\text{IF}_\theta = log(x) - T_\theta(F)$.
+    (1) $\theta = T_\theta(F) = \int log(x) d F(x)$ is a linear functional, so the influence function is $\text{IF}_\theta = log(x) - T_\theta(F)$ and the empirical influence function is $\widehat{\text{IF}}_\theta = log(x) - T_\theta(F_n)$ .
 
     $\lambda = T_\lambda(F) = log(\int x dF)$ is not a linear functional. So 
     \begin{equation*}
@@ -108,9 +108,10 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
             \text{IF}_\lambda & = \lim_{\epsilon\to0} \frac{T_\lambda((1-\epsilon)F + \epsilon \delta_x) - T_\lambda(F)}{\epsilon} \\
             & = \lim_{\epsilon\to0}  \frac{log(\int x d ((1-\epsilon)F + \epsilon \delta_x) - log(\int x dF)}{\epsilon} \\
             & = \lim_{\epsilon\to0}  \frac{log \left( \epsilon  x /\int x dF + 1-\epsilon \right)}{\epsilon} \\
-            & = \frac{x}{\int x dF} - 1
+            & = \frac{x}{\int x dF} - 1 .
         \end{split}
     \end{equation*}
+    And the empirical influence function is $\widehat{\text{IF}}_\lambda = \frac{x}{\int x d F_n} - 1$.
 
     (2) $\hat{\theta} = T_\theta(\hat{F}_n(x))$ and $\hat{\lambda} = T_\lambda(\hat{F}_n(x))$ are plug-in estimators of $\theta$ and $\lambda$ respectively. 
     First, we consider $\hat{\theta}$. 
@@ -136,12 +137,12 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
     
     They are different.
 
-    (3) We need to consider the breakdown points of those two estimators.
+    (3) Technically, we use breakdown points to measure the robustness of a statistic to outliers. Thus we consider the breakdown points of those two estimators.
     
     For $\hat{\theta}$, 
     \begin{equation*}
         T_\theta(F) - T_\theta(F_\epsilon) = \int log(x) d \epsilon (F -\delta_x)
-        = \epsilon (T_theta - log(x)).
+        = \epsilon (T_\theta - log(x)).
     \end{equation*}
     Then
     \begin{equation*}
@@ -152,20 +153,22 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
 
     For $\hat{\lambda}$, 
     \begin{equation*}
-        T_\lambda(F) - T_\lambda(F_\epsilon) = log( \int x d F ) - log( \int x d( (1-\epsilon)F + \epsilon \delta_x))
+        T_\lambda(F) - T_\lambda(F_\epsilon) = log \left( \int x d F \right) - log \left( \int x d( (1-\epsilon)F + \epsilon \delta_x)\right)
         % = log( \frac{ \int x d F}{\int x d( (1-\epsilon)F + \epsilon \delta_x)})
-        = log(\frac{\mu}{(1-\epsilon)\mu + \epsilon x})
+        = log\left(\frac{\mu}{(1-\epsilon)\mu + \epsilon x}\right)
     \end{equation*}
     Then
     \begin{equation*}
         \sup_x | T_\lambda(F) - T_\lambda(F_\epsilon) | 
         =  \infty,
-        \quad \text{when } x = \frac{(\epsilon - 1)\mu}{\epsilon}
+        \quad \text{when } x = \frac{(\epsilon - 1)\mu}{\epsilon} \text{ or } \infty.
     \end{equation*}
 
     Thus, breakdown point $\epsilon^* = 0$.
 
-    So, from the breakdown point characterization of robustness, they are both sensitive to outlier. 
+    So, from the breakdown point characterization of robustness, they are both sensitive to outliers. 
+    But, intuitively, log transformation can reduce the influence of outliers before taking a average of samples. 
+    
+    Thus I suppose $\theta= \int log(x) d F(x)$ is more robust to outliers than $\lambda = log \left( \int  x d F(x) \right)$.
+
 \end{solution}
-
-
