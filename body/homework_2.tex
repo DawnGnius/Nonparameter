@@ -94,7 +94,7 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
 
     (1) Find the influence function and empirical influence function of $\theta,\lambda$;
 
-    (2) Do $\hat\theta,\hat\lambda$ have the same limiting distribution?
+    (2) Do $\hat\theta,\hat\lambda$ have the same limit?
 
     (3) Who is more robust to outliers in $\hat\theta$ and $\hat\lambda$?
 \end{problem}
@@ -135,7 +135,9 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
     where $\tau_\lambda^2 = \int \text{IF}_\lambda(x) d F(x)$. 
     The limiting distribution of $\hat{\lambda}$ is $N(T_\lambda, \tau_\lambda^2/n)$
     
-    They are different.
+    Their limiting distributions are different.
+
+    But, 
 
     (3) Technically, we use breakdown points to measure the robustness of a statistic to outliers. Thus we consider the breakdown points of those two estimators.
     
