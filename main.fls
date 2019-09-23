@@ -1,0 +1,207 @@
+PWD c:\Users\Gnius\Documents\Code\Latex\Nonparameter
+INPUT C:\Program Files\CTEX\UserData\miktex\data\le\pdftex\pdflatex.fmt
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.tex
+OUTPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.log
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\base\article.cls
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\base\article.cls
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\base\size11.clo
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\base\size11.clo
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmr10.tfm
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\shortcuts.sty
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\shortcuts.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\color.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\color.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\dvipsnam.def
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\dvipsnam.def
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\jmlr2e.sty
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\jmlr2e.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\epsfig.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\epsfig.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\natbib\natbib.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\natbib\natbib.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\subfig\subfig.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\subfig\subfig.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\caption\caption.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\caption\caption.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\caption\caption3.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\caption\caption3.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\algorithm2e\algorithm2e.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\algorithm2e\algorithm2e.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\ifoddpage\ifoddpage.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\ifoddpage\ifoddpage.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\tools\xspace.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\tools\xspace.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\relsize\relsize.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\relsize\relsize.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\oberdiek\hobsub-hyperref.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\oberdiek\hobsub-hyperref.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\oberdiek\hobsub-hyperref.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\oberdiek\hobsub-generic.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\oberdiek\hobsub-generic.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\ifxetex\ifxetex.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\ifxetex\ifxetex.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\auxhook.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\auxhook.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\kvoptions.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\kvoptions.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\00miktex\hyperref.cfg
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\00miktex\hyperref.cfg
+INPUT C:\Program Files\CTEX\UserData\tex\latex\url\url.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\url\url.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\rerunfilecheck.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\rerunfilecheck.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\epstopdf.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\epstopdf.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\epstopdf-base.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\epstopdf-base.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\grfext.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\oberdiek\grfext.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\tools\tabularx.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\tools\tabularx.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\tools\array.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\tools\array.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\multirow\multirow.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\multirow\multirow.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\booktabs\booktabs.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\booktabs\booktabs.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\mdwtools\footnote.sty
+INPUT C:\Program Files\CTEX\UserData\tex\latex\mdwtools\footnote.sty
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.aux
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.aux
+OUTPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.aux
+INPUT C:\Program Files\CTEX\UserData\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\CTEX\UserData\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\oberdiek\gettitlestring.sty
+INPUT C:\Program Files\CTEX\MiKTeX\tex\generic\oberdiek\gettitlestring.sty
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+OUTPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+OUTPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.pdf
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\body\title.tex
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\body\title.tex
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmti10.tfm
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\body\homework_2.tex
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\body\homework_2.tex
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmti10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmr8.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmr6.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmmi10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmmi8.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmmi6.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmsy10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmsy8.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmsy6.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmex10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex8.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Program Files\CTEX\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx8.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx6.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam5.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx7.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx5.tfm
+INPUT C:\Program Files\CTEX\UserData\pdftex\config\pdftex.map
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.bbl
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.bbl
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\tfm\public\cm\cmtt10.tfm
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.aux
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+INPUT c:\Users\Gnius\Documents\Code\Latex\Nonparameter\main.out
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx12.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx12.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cmextra\cmex8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cmextra\cmex8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi6.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi6.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi7.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi7.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmr7.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmr7.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmr8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmr8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmti10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\cm\cmtt10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
+INPUT C:\Program Files\CTEX\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb

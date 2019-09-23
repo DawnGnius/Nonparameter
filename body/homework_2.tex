@@ -137,7 +137,9 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
     
     Their limiting distributions are different.
 
-    But, 
+    What's more, $\hat{\theta}=\frac{1}{n} \sum_{i=1}^n log(X_i) \to E(log(X))$ and $\hat{\lambda} = log\left( \frac{1}{n} \sum_{i=1}^n X_i\right) \to log(E(X))$ almost sure.
+
+    $E(log(X)) = log(E(X))$ only when $X$ is constants, otherwise $E(log(X)) < log(E(X))$ by Jensen's inequality.
 
     (3) Technically, we use breakdown points to measure the robustness of a statistic to outliers. Thus we consider the breakdown points of those two estimators.
     
