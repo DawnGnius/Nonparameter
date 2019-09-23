@@ -171,8 +171,60 @@ Intuitively\citep{Charles2006}, if we have n data points and we let a minority o
     Thus, breakdown point $\epsilon^* = 0$.
 
     So, from the breakdown point characterization of robustness, they are both sensitive to outliers. 
-    But, intuitively, log transformation can reduce the influence of outliers before taking a average of samples. 
-    
-    Thus I suppose $\theta= \int log(x) d F(x)$ is more robust to outliers than $\lambda = log \left( \int  x d F(x) \right)$.
 
+    For \emph{Gross error sensitivity}, we have
+    \begin{equation*}
+        \begin{split}
+            \gamma^*_\theta & = \sup_{\{ x: \text{IF}(x;T,F)\ exists\}} |\text{IF}_\theta(x;T,F)|     \\
+            & = \sup_x |log(x) - T_\theta(F) |\\
+            & = \infty,
+        \end{split}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{split}
+            \gamma^*_\lambda & = \sup_{\{ x: \text{IF}(x;T,F)\ exists\}} |\text{IF}_\lambda(x;T,F)|     \\
+            & = \sup_{x} \left| \frac{x}{\int x dF} - 1 \right| \\
+            & = \infty.
+        \end{split}
+    \end{equation*}
+
+
+    For \emph{Local shift sensitivity}, we have
+    \begin{equation*}
+        \begin{split}
+            \lambda^*_\theta & = \sup_{\{ x\neq y: \text{IF}_\theta(x;T,F) \text{ and } \text{IF}_\theta (y;T,F)  \ \text{both exists}\}} \frac{| \text{IF}_\theta (y;T,F) - \text{IF}_\theta (x;T,F)|}{|y-x|} \\
+            & = \sup_{x\neq y} \frac{|log(y)-log(x)|}{|y-x|} \\
+            & = \infty
+        \end{split}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{split}
+            \lambda^*_\lambda & = \sup_{\{ x\neq y: \text{IF}_\lambda(x;T,F) \text{ and } \text{IF}_\lambda (y;T,F)  \ \text{both exists}\}} \frac{| \text{IF}_\lambda (y;T,F) - \text{IF}_\lambda (x;T,F)|}{|y-x|} \\
+            & = \sup_{x\neq y} \frac{|y-x|}{|(y-x)\int x dF|} \\
+            & = \frac{1}{|\int x dF|}
+        \end{split}
+    \end{equation*}
+    
+    For \emph{Reject point}, we have
+    \begin{equation*}
+        \begin{split}
+            \rho^*_\theta  & = \inf \{r>0: \text{IF}_\theta (x;T,F)=0, \forall |x| >r \} \\
+            & =  \inf \{r>0: log(x)-T_\theta(F)=0, \forall |x| >r \} \\
+            & = \infty
+        \end{split}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{split}
+            \rho^*_\lambda  & = \inf \{r>0: \text{IF}_\lambda (x;T,F)=0, \forall |x| >r \} \\
+            & = \inf \{r>0:\frac{x}{\int x dF} -1=0, \forall |x| >r \} \\
+            & = \infty.
+        \end{split}
+    \end{equation*}
+
+    In summary, $\hat{\theta}$ and $\hat{\lambda}$ have the same \emph{Gross error sensitivity},  \emph{Reject point} and \emph{Breakdown Point}, while $\hat{\lambda}$ has finity \emph{Local shift sensitivity} which is small than that of $\hat{\theta}$. 
+
+    Thus I suppose $\hat{\theta}= \int log(x) d F_n(x)$ is more robust to outliers than $\hat{\lambda} = log \left( \int  x d F_n(x) \right)$.
 \end{solution}
