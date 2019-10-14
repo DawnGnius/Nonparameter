@@ -1,5 +1,4 @@
 *.json
-# *.pdf
 *.gz
 *.log
 *.aux
@@ -8,3 +7,5 @@
 *.blg
 *.bbl
 *.out
+# *.html
+# *.pdf
