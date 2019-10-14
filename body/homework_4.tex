@@ -1,0 +1,142 @@
+
+\begin{problem}
+    Read the first four chapters of \citet{Owen2001}.
+\end{problem}
+
+\begin{problem}
+    Coding
+\end{problem}
+
+\begin{problem}
+    Assume that $(X_i,Y_i), i=1,\cdots,n$ are  i.i.d. samples from population $(\mathbf{X},\mathbf{Y})$. Parameter of interest is $\tau=\sigma^2_X / \sigma^2_Y$, where  $\sigma^2_X$ and $\sigma^2_Y$ are variance of $X$ and $Y$ respectively. Denote $\theta$ by $(\tau,\eta')'$ where $\eta$ is nuisance parameter. Try to give a set of simultaneous equations to estimate $\theta$ and represent the empirical likelihood confidence intercal of $\tau$.
+\end{problem}
+
+\begin{solution}
+    To define $\tau$ by $X$ and $Y$, we formulate the following five estimationg equations:
+    \begin{equation*}
+        \begin{split}
+            0 & = E[X-\mu_x], \\
+            0 & = E[Y-\mu_y], \\
+            0 & = E[(X-\mu_x)^2 - \sigma^2_X], \\
+            0 & = E[(Y-\mu_y)^2 - \sigma^2_Y],\\
+            0 & = E[\sigma^2_X / \sigma^2_Y - \tau].
+        \end{split}
+    \end{equation*}
+    for the parameter $\theta=(\tau,\mu_x,\mu_y,\sigma^2_X, \sigma^2_Y)'$.
+
+    To handle nuisance parameter, write the estimating function as $m(X,Y,\tau,\eta')=0$, $\tau\in \mathbb{R}, \eta\in \mathbb{R}^4$.
+    The parameters $(\tau,\eta')$ satisfy the equations $E[m(X,Y,\tau,\eta')]=0$.
+
+    Now we define 
+    \begin{equation*}
+        \mathcal{R}(\tau,\eta') = \max \left\{ \prod_{i=1}^n n\omega_i | \sum_{i=1}^n \omega_i m(X,Y,\tau,\eta') =0, \omega_i\ge 0, \sum_{i=1}^n \omega_i=1 \right\}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \mathcal{R}(\tau) = \max_{\eta} \mathcal{R}(\tau,\eta') .
+    \end{equation*}
+
+    Under mild conditions as described in Chapter 3.10 \citep{Owen2001}, $-2log  \mathcal{R}(\tau) \to \chi^2_{(1)}$.
+
+    Thus, a $100(1-\alpha)\%$ empirical likelihood confidence intercal of $\tau$ can be represented as 
+    \begin{equation*}
+        \left\{ \tau |  -2log \mathcal{R}(\tau) \le \chi^{2,1-\alpha}_{(1)}\right\}.
+    \end{equation*}
+\end{solution}
+
+
+
+
+\begin{problem}
+    Let $X,X_1,\ldots,X_n i.i.d\sim F$, find kernel $h(x_1,x_2,x_3)$ such that $E_Fh(X_1,X_2,X_3)=E(X-E_FX)^3$
+\end{problem}
+
+\begin{solution}
+    Let's consider the following equations
+
+    \begin{equation}
+        \begin{split} 
+            s_n^3 
+            & = \frac{n}{(n-1)(n-2)} \sum_{i=1}^n (X_i - \bar{X}_n)^3 \\
+            & = - \frac{1}{6n(n-1)(n-2)} \sum_{i=1}^{n} \sum_{j=1}^{n} \sum_{k=1}^{n} \left(\left(X_{i}-\bar{X}_{n}\right)^{3} + \left(X_{j}-\bar{X}_{n}\right)^{3} - 8\left(X_{k}-\bar{X}_{n}\right)^{3}\right) \\ 
+            & = - \frac{1}{6n(n-1)(n-2)} \sum_{i=1}^{n} \sum_{j=1}^{n} \sum_{k=1}^{n} \left(\left(X_{i}-\bar{X}_{n}\right) + \left(X_{j}-\bar{X}_{n}\right) - 2\left(X_{k}-\bar{X}_{n}\right) \right)^{3} \\ 
+            & = - \frac{1}{6n(n-1)(n-2)} \sum_{i=1}^{n} \sum_{j=1}^{n} \sum_{k=1}^{n}  \left(X_{i}+X_{j} - 2X_k \right)^{3} \\ 
+            & = \frac{1}{\left(
+                \begin{matrix}
+                    {n} \\ 
+                    {3}
+                \end{matrix}\right)} 
+                \sum_{i,j,k} \frac{1}{36}\left(2X_{i}-X_{j}-X_k\right)^{3} 
+        \end{split}
+    \end{equation}
+
+    Thus, $h(x_1,x_2,x_3)= \frac{1}{36}\left( 2x_1 - x_2 - x_3 \right)^{3}$
+
+\end{solution}
+
+
+
+\begin{problem}
+    Prove the $\zeta_1=1/9$ in slide (page 25).
+\end{problem}
+
+\begin{solution}
+    Let $X\sim F(x), Y\sim G(y)$. Because $X$ and $Y$ are independent, $\tau = 0$. 
+    Thus we have
+    \begin{equation*}
+        \begin{split}
+            \zeta_1 & = Cov (h(P_1, P_2), h(P_1, P_3)) \\
+            & = E[h(P_1, P_2) h(P_1, P_3)] \\
+            & = 1\times P(h(P_1, P_2) h(P_1, P_3)=1) + (-1) \times P(h(P_1, P_2) h(P_1, P_3)=-1) \\
+            & = 2P(h(P_1, P_2) h(P_1, P_3)=1)-1
+        \end{split}
+    \end{equation*}
+
+    Denote $P_i = (X_i,Y_i), i=1,2,3$ , we have
+    \begin{equation*}
+        \begin{split}
+            &  P(h(P_1, P_2) h(P_1, P_3)=1   |P_1, h(P_1, P_2)=1) \\
+            = & P(h(P_1, P_3)=1|P_1) \\
+            = & P(X_3>X_1, Y_3>Y_1 \text{ or } X_3<X_1, Y_3<Y_1) \\
+            = & (1-F(X_1))(1-G(Y_1)) + F(X_1)G(Y_1)
+        \end{split}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{split}
+            &  P(h(P_1, P_2) h(P_1, P_3)=1   | P_1, h(P_1, P_2)=-1) \\
+            = & P(h(P_1, P_3)=-1 | P_1) \\
+            = & P(X_3<X_1, Y_3>Y_1 \text{ or } X_3>X_1, Y_3<Y_1) \\
+            = & F(X_1)(1-G(Y_1)) + (1-F(X_1))G(Y_1)
+        \end{split}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \begin{split}
+            & P(h(P_1, P_2) h(P_1, P_3)=1 |  P_1) \\
+            &= P(h(P_1, P_2)=1, h(P_1, P_3)=1 |  P_1) + P(h(P_1, P_2)=-1, h(P_1, P_3)=-1 |  P_1) .
+        \end{split}
+    \end{equation*}
+    Thus
+    \begin{equation*}
+        \begin{split}
+            & P(h(P_1, P_2) h(P_1, P_3)=1) \\
+            = & E[P(h(P_1, P_2) h(P_1, P_3)=1 |  P_1)]\\
+            = & \int\int [(1-F(X_1))(1-G(Y_1)) + F(X_1)G(Y_1)]^2 + \\
+            & \quad\quad\quad\quad [F(X_1)(1-G(Y_1)) + (1-F(X_1))G(Y_1)]^2 d F d G \\
+            & \frac{5}{9}
+        \end{split}
+    \end{equation*}
+
+    So, we have $\zeta_1=1/9$.
+\end{solution}
+
+
+
+\begin{problem}
+    Let $X_1,\ldots,X_n i.i.d \sim Uniform(0,\tau)$ kernel $h(x,y)=|x-y|$ and U-statistics $G_n=\frac{1}{{n\choose 2}}\sum_{i<j}|X_i-X_j|$, find the limit distribution of $G_n$.
+\end{problem}
+
+\begin{solution}
+    The Hajek projection of $U-\theta$ os 
+\end{solution}

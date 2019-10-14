@@ -1,0 +1,99 @@
+\begin{problem}
+考虑bootstrap包里的scor考试成绩数据. 此数据是88名考生5门课程的考试成绩:mechanics, vectors, algebra, analysis, statistics. 前两门为闭卷考试, 其余
+三门为开卷考试.在scor数据下, 记协方差矩阵为$\Sigma$, 其特征根为$\lambda_1>\cdots>\lambda_5>0$. 则
+\begin{equation*}
+    \theta=\frac{\lambda_1}{\sum_{i=1}^5\lambda_i}
+\end{equation*}
+表示了主成分中第一主成分对方差的解释比例. 现在记$\theta=\frac{\lambda_1}{\sum_{i=1}^5\lambda_i}$
+为样本协方差矩阵$\hat\Sigma$的特征根.
+
+（1）. 分别使用Bootstrap方法和Jackknife方法估计$\theta$的估计
+\begin{equation*}
+    \hat\theta=\frac{\hat\lambda_1}{\sum_{i=1}^5\hat\lambda_i}
+\end{equation*}
+的偏差和标准差。
+
+（2）. 计算在(1)中的Bootstrap重复样本下$\theta$的$95\%$百分位数置信区间和BCa置信区间.
+\end{problem}
+
+\begin{solution}
+(1)
+使用 R 中的 boostrap 包, 及如下代码计算 $\hat{\theta}$ 的偏差和标准误差. 
+
+\begin{lstlisting}[language=R] 
+n  <-  nrow(scor)
+cov.hat  <-  cov(scor)
+eigenvalue.hat  <-  eigen(cov.hat)$values
+theta.hat  <-  eigenvalue.hat[1]/sum(eigenvalue.hat) 
+
+B  <-  50
+theta.b  <-  numeric(B)
+for (i in 1:B) {
+    i   <-   sample(1:n, size = n, replace = TRUE)
+    cov.b  <-  cov(scor[i,])
+    eigenvalue.b  <-  eigen(cov.b)$values
+    theta.b[i]  <-  eigenvalue.b[1]/sum(eigenvalue.b)
+}
+bias.b  <-  mean(theta.b-theta.hat)
+se.b  <-  sd(theta.b)
+print(bias.b)
+print(se.b)
+\end{lstlisting} 
+
+得到 $bias()\hat{\theta})$ 以及 $se(\hat{\theta})$ 分别为 $0.05944855$ 和 $0.04929686$.
+
+使用 Jackknife 函数来估计 $\hat{\theta}$ 的偏差和标准误差, 代码如下
+\begin{lstlisting}[language=R] 
+theta.jack <- numeric(n)
+for(i in 1:n){
+  cov.jack <- cov(scor[-i,])
+  eigenvalue.jack <- eigen(cov.jack)$values
+  theta.jack[i] <- eigenvalue.jack[1]/sum(eigenvalue.jack)
+}
+bias.jack <- (n-1)*(mean(theta.jack)-theta.hat)
+print(bias.jack)
+se.jack <- sqrt((n-1) *mean((theta.jack - mean(theta.jack))^2))
+print(se.jack)
+\end{lstlisting}
+得到 $bias()\hat{\theta})$ 以及 $se(\hat{\theta})$ 分别为 $0.001069139$ 和 $0.04955231$.
+
+(2) 使用 bootstrap 和 boot 包, 运行如下代码
+\begin{lstlisting}[language=R] 
+data(scor,package="bootstrap")
+theta.boot<-function(scor,i){
+    eigenvalue<-eigen(cov(scor[i,],scor[i,]))$values
+    eigenvalue[1]/sum(eigenvalue)
+}
+boot.obj<-boot(scor, theta.boot,R=2000)
+print(boot.ci(boot.obj,type = c("perc","bca")))
+\end{lstlisting}
+得到 $\theta$的$95\%$百分位数置信区间和BCa置信区间分别为 $( 0.5219,  0.7068 ) ,\ ( 0.5219,  0.7068 )$.
+\end{solution}
+
+\begin{problem}
+设$X_1,\ldots,X_n$表示不同的样本值, $X_1^*,\ldots,X_n^*$为一个Bootstrap抽样, 令$X_1^*,\ldots,X_n^*$, 求期望 $E(\bar{X}^*|X_1,\ldots,X_n)$, $Var(\bar{X}^*|X_1,\ldots,X_n)$以及$E(\bar{X}^*)$和$Var(\bar{X}^*)$.
+\end{problem}
+
+\begin{solution}
+    \begin{equation*}
+        E\left[\overline{X}^{*} | X_{1}, \cdots, X_{n}\right]=E\left[\frac{1}{n} \sum_{i=1}^{n} X_{i}^{*} | X_{1}, \cdots, X_{n}\right]=E\left[X_{1}^{*} | X_{1}, \cdots, X_{n}\right]=\frac{1}{n} \sum_{i=1}^{n} X_{i}
+    \end{equation*}
+
+    \begin{equation*}
+    \begin{aligned} E\left[\left(\overline{X}^{*}\right)^{2} | X_{1}, \cdots, X_{n}\right] &=\frac{1}{n^2} E\left[\left(\sum_{i=1}^{n} X_{i}^{\star}\right)^{2} | X_{1}, \cdots, X_{n}\right] \\ &=\frac{1}{n^2} \sum_{i=1}^{n} E\left[\left(X_{i}^{\star}\right)^{2} | X_{1}, \cdots, X_{n}\right] \\ &=\frac{1}{n} E\left[\left(X_{1}^{*}\right)^{2} | X_{1}, \cdots, X_{n}\right] \\ &=\frac{1}{n^2} \sum_{i=1}^{n} X_{i}^{2} \end{aligned}
+    \end{equation*}
+
+    \begin{equation*}
+    \begin{aligned} \operatorname{var}\left(\overline{X}^{\star} | X_{1}, \cdots, X_{n}\right) &=E\left[\left(\overline{X}^{\star}\right)^{2} | X_{1}, \cdots, X_{n}\right]-\left(E\left[\overline{X}^{\star} | X_{1}, \cdots, X_{n}\right]\right)^{2} \\ &=\frac{1}{n^2} \sum_{i=1}^{n} X_{i}^{2}-\left(\frac{1}{n} \sum_{i=1}^{n} X_{i}\right)^{2} \end{aligned}
+    \end{equation*}
+
+    再由双期望公式得
+
+    \begin{equation*}
+        E\left[\overline{X}^{*}\right]=E\left[\frac{1}{n} \sum_{i=1}^{n} X_{i}\right]=E X
+    \end{equation*}
+
+    \begin{equation*}
+    \begin{aligned} \operatorname{var}\left(\overline{X}^{*}\right) &=E\left[\operatorname{var}\left(\overline{X}^{*} | X_{1}, \cdots, X_{n}\right)\right]+\operatorname{var}\left(E\left[\overline{X}^{*} | X_{1}, \cdots, X_{n}\right]\right) \\ &=E\left[\frac{1}{n^2} \sum_{i=1}^{n} X_{i}^{2}-\left(\frac{1}{n} \sum_{i=1}^{n} X_{i}\right)^{2}\right]+\operatorname{var}\left(\frac{1}{n} \sum_{i=1}^{n} X_{i}\right) \\ &=\frac{1}{n^2} \sum_{i=1}^{n} E\left[X_{i}^{2}\right]-\frac{1}{n^2} E\left[\left(\sum_{i=1}^{n} X_{i}\right)^{2}\right]+\frac{1}{n^2} \operatorname{var}\left(\sum_{i=1}^{n} X_{i}\right) \\ &=\operatorname{var}(X) / n \end{aligned}
+    \end{equation*}
+\end{solution}
