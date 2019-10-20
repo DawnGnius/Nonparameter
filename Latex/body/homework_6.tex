@@ -177,25 +177,104 @@ where $Z_1, Z_2$ are independent $N(0,1)$.
 
 
 
-\begin{problem}
-    Prove the Hoeffding decomposition in page 13.
+\begin{problem}[Prove the Hoeffding decomposition in page 13]
+    
+
+    Let's consider the following U-statistic of order 2,
+    \begin{equation*}
+        U_n = \frac{1}{ \begin{pmatrix} n \\ 2 \end{pmatrix} } \sum_{i<j} h(X_i,X_j)
+    \end{equation*}
+
+    The Hoeffding decomposition is:
+    \begin{equation*}
+        U_{n}=U+\frac{2}{n} \sum_{i} h_{1}\left(X_{i}\right)+\frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}} \sum_{i<j} h_{2}\left(X_{i}, X_{j}\right)
+    \end{equation*}
+    where
+    \begin{equation*}
+        \begin{split}
+            U & =  E U_{n}= E h\left(X_{1}, X_{2}\right), \\
+            h_{1}(x) & =  E h\left(x, X_{2}\right)-U, \\ 
+            h_{2}(x, y) & =  h(x, y)-h_{1}(x)-h_{1}(y)-U.
+        \end{split}
+    \end{equation*}
 \end{problem}
 
 
 \begin{solution}
+    % To prove the Hoeffding decomposition of $U_n$, it is sufficient to check the orthogonality relation.
+    According to Problem 4 in the following, we can obtain the Hoeffding decomposition directly,
+    \begin{equation*}
+        \begin{split}
+            U_{n} & = \sum_{c=0}^{2} \sum_{|A|=c}  \sum_{B\subset \{1,c\}}  P_{A} U_{n} \\
+        \end{split}
+    \end{equation*}
+
+    Additional, we have     
+    \begin{equation*}
+        \begin{split}
+            P_{\emptyset} h & =E h ,\\ 
+            P_{[i]} h& = E\left(h | X_{i}\right)-E h ,\\ 
+            P_{[i, j]} h& =E\left(h | X_{i}, X_{j}\right)-E\left(h | X_{i}\right)-E\left(h | X_{j}\right)+E h.
+        \end{split}
+    \end{equation*}
     
+    Thus,
+    \begin{equation*}
+        \begin{split}
+            U_{n} & = P_{\emptyset} h + \frac{2}{n} \sum_i P_{[i]} h + \frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}}\sum_{i<j} P_{[i, j]} h\\
+            % & = P_{\emptyset} h + \frac{2}{n} \sum_i P_{[1]} h + \frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}} \sum_{i<j} P_{[i, j]} h
+        \end{split}
+    \end{equation*}
+    which leads to
+    \begin{equation*}
+        U_{n}=U+\frac{2}{n} \sum_{i} h_{1}\left(X_{i}\right)+\frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}} \sum_{i<j} h_{2}\left(X_{i}, X_{j}\right)
+    \end{equation*}
+    where
+    \begin{equation*}
+        \begin{split}
+            U & =  E h\left(X_{1}, X_{2}\right), \\
+            h_{1}(x) & =  E h\left(x, X_{2}\right)-U, \\ 
+            h_{2}(x, y) & =  h(x, y)-h_{1}(x)-h_{1}(y)-U.
+        \end{split}
+    \end{equation*}
 \end{solution}
 
 
 
 
-\begin{problem}
-    Prove the T decomposition in page 12.
+\begin{problem}[Prove the $T$ decomposition in page 12]
+
+    If $T = T (X_1, . . . ..X_n)$ is permutation symmetric and $X_1, . . . ..X_n$ are independent and identically distributed, then the Hoeffding decomposition of $T$ can be simplified to 
+    \begin{equation*}
+        T=\sum_{r=0}^{n} \sum_{|A|=r} g_{r}\left(X_{i}: i \in A\right),
+    \end{equation*}
+    where 
+    \begin{equation*}
+        g_{r}\left(x_{1}, \ldots, x_{r}\right)=\sum_{B \subset\{1, \ldots, r\}}(-1)^{r-|B|} \operatorname{ET}\left(x_{i} \in B, X_{i} \notin B\right).
+    \end{equation*}
 \end{problem}
 
 
 \begin{solution}
-    
+    By the theorem in slide page 8, the projection of $T$ onto $H_{A}$ is given by
+    \begin{equation*}
+        P_{A} T = \sum_{B \subset A} (-1)^{|A|-|B|} E\left(T | X_{i}: i \in B\right).
+    \end{equation*}
+    We have 
+    \begin{equation*}
+        \begin{split}
+            T & = \sum_{r=0}^n \sum_{|A|=r} P_{A} T ,\\
+            & =  \sum_{r=0}^n \sum_{|A|=r} \sum_{B\subset A} (-1)^{r-|B|} E\left(T | X_{i}: i \in B\right) ,\\
+        \end{split}
+    \end{equation*}
+    because $T = T (X_1, . . . ..X_n)$ is permutation symmetric, we have
+    \begin{equation*}
+        \begin{split}
+            T 
+            & =  \sum_{r=0}^n \sum_{|A|=r} \sum_{B\subset \{1,\dots,r\}} (-1)^{r-|B|} E\left(T | X_{i}: i \in B\right). \\
+        \end{split}
+    \end{equation*}
+    This leads to the assertion.
 \end{solution}
 
 
