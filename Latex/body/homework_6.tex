@@ -1,5 +1,5 @@
 \begin{problem}
-Let $X_1,\ldots,X_m i.i.d\sim F$, $Y_1,\ldots,Y_n i.i.d \sim G$ and i.i.d. within each sample, then
+Let $X_1,\ldots,X_m i.i.d\sim F$, $Y_1,\ldots,Y_n i.i.d \sim G$ and i.i.d within each sample, then
 
 (1) get the U-statistic $U_n$ with kernel $h(x_1,x_2,y_1,y_2)=I(x_1<y_1,x_2<y_2)$,
 
@@ -111,7 +111,7 @@ where $\theta=\left(\int F(y) d G(y) \right)^2$, $\zeta_{1,0}=\left(\int F(y) d 
 \begin{problem}
     Suppose the distribution of $X$ is symmetric about zero with variance $\sigma^2>0$ and $EX^4 < \infty$, consider kernel $h(x,y)=xy+(x^2-\sigma^2)(y^2-\sigma^2)$, then
 
-(1) prove that the U-statistic $U_n$ with kernel $h$ is degenerated of order 1,
+(1) prove that the U-statistic $U_n$ with kernel $h(x,y)$ has a degeneracy of order $1$,
 
 (2) get $\lambda_1, \lambda_2$ and orthogonal functions $\Phi_1(x), \Phi_2(x)$, such that $h(x,y)=\lambda_1\varphi_1(x)\varphi_1(y)+\lambda_2\varphi_2(x)\varphi_2(y)$,
 
@@ -120,7 +120,58 @@ where $\theta=\left(\int F(y) d G(y) \right)^2$, $\zeta_{1,0}=\left(\int F(y) d 
 
 
 \begin{solution}
-    
+(1)
+Firstly, we obtain U-statistic $U_n$,
+\begin{equation*}
+    U_n = \frac{1}{\left(\begin{matrix} n \\ 2  \end{matrix}\right)} \sum_{i<j}^n X_iX_j + (X_i^2-\sigma^2)(X_j^2-\sigma^2)
+\end{equation*}
+with $X_1, \dots,X_n\, i.i.d$  and $E[X_i]=\mu=0, E[X_i^3]=0$.
+
+Then, we obtain $\theta$,
+\begin{equation*}
+    \begin{split}
+        \theta & = E[h(X_1, X_2)]  \\
+        & = E [ X_1X_2 + (X_1^2-\sigma^2)(X_2^2-\sigma^2) ] \\
+        & = \mu^2 + \mu^4.
+    \end{split}
+\end{equation*}
+Therefore, $U_n$ is an unbiased estimator of $\mu^2 + \mu^4$.
+
+To prove the U-statistic $U_n$ with kernel $h(x,y)$ has a degeneracy of order $1$, it's sufficient to show that $\zeta_1=0$ and $\zeta_2> 0$.
+
+Since $h_1(x) = E[xX_2 + (x^2-\sigma^2)(X_2^2-\sigma^2)] = x\mu + (x^2-\sigma^2)\mu^2$ and
+\begin{equation*}
+    \begin{split}
+        \zeta_1 & = \var[h_1(X_1)] = \mu^2 (\var(X_1 + \mu(X_1^2-\sigma^2))) = 0 \\
+        \zeta_2 & = \var[h(X_1, X_2)] = \var[X_1X_2 + (X_1^2-\sigma^2)(X_2^2-\sigma^2)] \\
+        & = \sigma^4 + \left( E[X_1^4] - \sigma^4 \right)^2 > 0 
+    \end{split}
+\end{equation*}
+so that the degeneracy is of order 1.
+
+(2) We  take $A(x_1, x_2) = h(x_1, x_2) - \theta$, where $\theta = E h(X_1, X_2) = 0$.
+For $k=1,2$, 
+\begin{equation}\label{eq:A}
+    E[A(x,X_2)\phi_k(X_2)] = \lambda_k \phi_k(x).
+\end{equation}
+
+We choose $\phi_1(x) = x/\sigma, \phi_2(x) = (x^2-\sigma^2)/\sqrt{EX^4-\sigma^4}$, which satisfy $E\phi_j(X_1)=0$ and 
+\begin{equation*}
+    E\phi_j(X_1)\phi_k(X_1) = \left\{
+    \begin{aligned}
+        1, & \quad\quad j=k \\
+        0, & \quad\quad j\neq k
+    \end{aligned}
+    \right.
+\end{equation*}
+So $\phi_1$ is orthogonal with $\phi_2$. Thus $\lambda_1 = \sigma^2, \lambda_2=EX^4-\sigma^4$ by \eqref{eq:A}.
+
+(3) $U_n$ is the U-statistic associated with a symmetric kernel of degree 2, degeneracy of order $1$ and expectation $0$. Then
+\begin{equation*}
+        nU_n \leadsto \sigma^2(Z_1^2-1) + (EX^4-\sigma^4)(Z_2^2-1),
+\end{equation*}
+where $Z_1, Z_2$ are independent $N(0,1)$. 
+
 \end{solution}
 
 
