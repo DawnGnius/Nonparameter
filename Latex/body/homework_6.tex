@@ -212,22 +212,34 @@ where $Z_1, Z_2$ are independent $N(0,1)$.
     Additional, we have     
     \begin{equation*}
         \begin{split}
-            P_{\emptyset} h & =E h ,\\ 
-            P_{[i]} h& = E\left(h | X_{i}\right)-E h ,\\ 
-            P_{[i, j]} h& =E\left(h | X_{i}, X_{j}\right)-E\left(h | X_{i}\right)-E\left(h | X_{j}\right)+E h.
+            P_{\emptyset} h(X_1, X_2) & =E h(X_1, X_2) ,\\ 
+            P_{[1]} h(X_1, X_2)& = E\left(h(X_1,X_2) | X_1\right)-E h(X_1, X_2) ,\\ 
+            P_{[1, 2]} h(X_1, X_2)& =E\left(h(X_1, X_2) | X_1, X_2\right)-E\left(h(X_1, X_2) | X_1\right)-E\left(h(X_1, X_2) | X_2\right)+E h(X_1, X_2).
+        \end{split}
+    \end{equation*}
+    so, 
+    \begin{equation*}
+        \begin{split}
+            P_{\emptyset} U_n & =E h ,\\ 
+            P_{[1]} U_n& = \frac{1}{ \begin{pmatrix} n \\ 2 \end{pmatrix} } \sum_{i<j} P_{[1]} h(X_i,X_j) ,\\ 
+                & = \frac{n-1}{ \begin{pmatrix} n \\ 2 \end{pmatrix} }  P_{[1]} h(X_1, X_2) \\
+                & = \frac{2}{n}  ( Eh(X_1, X_2) - Eh ), \\
+            P_{[1, 2]} U_n & = \frac{1}{ \begin{pmatrix} n \\ 2 \end{pmatrix} } \sum_{i<j} P_{[1,2]} h(X_i,X_j) \\ 
+                & = \frac{1}{ \begin{pmatrix} n \\ 2 \end{pmatrix} } P_{[1,2]} h(X_1,X_2) \\
+                % & =\frac{1}{ \begin{pmatrix} n \\ 2 \end{pmatrix} } \sum_{k<l} (E\left(h(X_k, X_l) | X_{k}, X_{l}\right)-E\left(h(X_k, X_l) | X_{k}\right)-E\left((X_k, X_l) | X_{l}\right)+E h).
         \end{split}
     \end{equation*}
     
     Thus,
     \begin{equation*}
         \begin{split}
-            U_{n} & = P_{\emptyset} h + \frac{2}{n} \sum_i P_{[i]} h + \frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}}\sum_{i<j} P_{[i, j]} h\\
+            U_{n} & = P_{\emptyset} U_n +  \sum_i P_{[i]} U_n + \sum_{i<j} P_{[i, j]} U_n\\
             % & = P_{\emptyset} h + \frac{2}{n} \sum_i P_{[1]} h + \frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}} \sum_{i<j} P_{[i, j]} h
         \end{split}
     \end{equation*}
     which leads to
     \begin{equation*}
-        U_{n}=U+\frac{2}{n} \sum_{i} h_{1}\left(X_{i}\right)+\frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}} \sum_{i<j} h_{2}\left(X_{i}, X_{j}\right)
+        U_{n}=U+\frac{2}{n} \sum_{i} h_{1}\left(X_1\right)+\frac{1}{\begin{pmatrix} n\\2   \end{pmatrix}} \sum_{i<j} h_{2}\left(X_1, X_{j}\right)
     \end{equation*}
     where
     \begin{equation*}
@@ -275,6 +287,8 @@ where $Z_1, Z_2$ are independent $N(0,1)$.
         \end{split}
     \end{equation*}
     This leads to the assertion.
+
+    \emph{(Actually, with some simple deduction, I know that we can obtain the conclusion according to permutation symmetric, if any, I cannot write any other details. Please, help me improve the solution if I left something important.)}
 \end{solution}
 
 
