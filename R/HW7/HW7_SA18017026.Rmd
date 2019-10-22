@@ -1,0 +1,33 @@
+---
+title: "Homework7"
+author: "Liu Huihang"
+date: "10/22/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1
+
+Consider Bart Simpson density
+\begin{equation}
+  f(x)=\frac{1}{2} \phi(x ; 0,1)+\frac{1}{10} \sum_{j=0}^{4} \phi(x ;(j / 2)-1,1 / 10)
+\end{equation}
+where $\phi(x ;\mu, \sigma)$ denotes a Normal density with mean $\mu$ and standard deviation $\sigma$.
+
+Generate $1000$ sample from Bart Simpson distribution, estimate its density by histogram and compare different interval segmentation method. 
+Estimate density use naive density estimator with image and compare the effect of different bandwidth $h$.
+
+## Answer 1
+
+### Data Preparation
+
+### Histogram
+```{r}
+hist(x)
+hist(x, breaks="Scott")
+hist(x, breaks="FD")
+```
+### Naive Density Estimator
