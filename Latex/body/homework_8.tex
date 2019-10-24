@@ -1,0 +1,53 @@
+\begin{problem}
+    Let $X_1,\ldots,X_n,\, i.i.d$ from density $f(x)$, denote $r$ derivative of density function by $\hat{f}^{(r)}_h$, please find the asymptotic distribution of $\hat{f}^{(r)}_h$.
+\end{problem}
+
+\begin{solution}
+    We have
+    \begin{equation*}
+        \begin{split}
+            E \left[ f_{h}^{(r)}(x) \right]  & =\frac{1}{h} \int K\left(\frac{x-z}{h}\right) f^{(r)}(z) d z \\ 
+            % {\quad=\frac{1}{h} \int K(u) f^{(r)}(x-u h) d u} \\ 
+            % {\quad=\frac{1}{h} \int K(u)\left[f^{(r)}(x)-f^{(r+1)}(x) u h+\frac{1}{2} f^{(r+1)}(x) u^{2} h^{2}+o\left(h^{2}\right)\right] d u} \\ 
+            & = f^{(r)}(x)+\frac{1}{2} f^{(r+2)}(x) \kappa_{21} h^{2}+o\left(h^{2}\right),
+        \end{split}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \operatorname{Var}\left[f_{h}^{(r)}(x)\right] = \frac{f(x)}{n h^{2 r+1}} \int\left[K^{(r)}(u)\right]^{2} d u + o\left(\frac{1}{n h^{2 r+1}}\right).
+    \end{equation*}
+
+    Choose $h(x) = c n^{-1/(2r+5)}$.    
+    Thus,
+    \begin{equation*}
+        \frac{f_{h}^{(r)}(x) -E \left[ f_{h}^{(r)}(x) \right]} {\sqrt{\operatorname{Var}\left[f_{h}^{(r)}(x)\right]}} \leadsto N(0,1),
+    \end{equation*}
+    
+    Because
+    \begin{equation*}
+        \begin{split}
+            & \frac{f_{h}^{(r)}(x) - f^{(r)}(x) - \frac{1}{2} f^{(r+2)}(x) \kappa_{21} h^{2}}{\sqrt{\frac{f(x)}{n h^{2 r+1}} \int\left[K^{(r)}(u)\right]^{2} d u}} \\
+            = &  \frac{f_{h}^{(r)}(x) - f^{(r)}(x) - \frac{1}{2} f^{(r+2)}(x) \kappa_{21} c^{2} n^{-2/(2r+5)}}{\sqrt{n^{-4/ (2 r+5)} c^{-2r-1} f(x) \int\left[K^{(r)}(u)\right]^{2} d u}} \\
+            = & n^{2/ (2 r+5)} \frac{f_{h}^{(r)}(x) - f^{(r)}(x)}{\sqrt{c^{-2r-1} f(x) \int\left[K^{(r)}(u)\right]^{2} d u}} - \frac{\frac{1}{2} c^{2} f^{(r+2)}(x) \kappa_{21}}{\sqrt{ c^{-2r-1} f(x) \int\left[K^{(r)}(u)\right]^{2} d u}}\\
+        \end{split}
+    \end{equation*}
+    so we obtain
+    \begin{equation*}
+        n^{2/ (2 r+5)} \left( f_{h}^{(r)}(x) - f^{(r)}(x) \right) \leadsto N\left( \frac{1}{2} c^{2} f^{(r+2)}(x) \kappa_{21}, c^{-2r-1} f(x) \int\left[K^{(r)}(u)\right]^{2} d u\right).
+    \end{equation*}
+\end{solution}
+
+
+\begin{problem}
+    Generate 1000 samples from distribution $0.3N(0,1)+0.7N(1,0.32)$,  draw one figure with different estimated derivative of density functions with different bandwidth $h$ where $h$ is given by \emph{kedd}.
+\end{problem}
+
+\begin{problem}[Adaptive KDE]
+    Write program to draw the figure of 21 pages of courseware.
+    (Referring algorithm steps in reading materials)
+\end{problem}
+
+\begin{problem}[Kernel Density Estimation with Boundary Correction]
+    Reade accessory materials. Write program to realize the result in 39 pages of slide. 
+    (Reading material, Figure 3)
+\end{problem}

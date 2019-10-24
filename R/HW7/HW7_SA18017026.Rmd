@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
 ```
 
 ## Problem 1
@@ -24,10 +25,74 @@ Estimate density use naive density estimator with image and compare the effect o
 
 ### Data Preparation
 
+We generate samples from multinomial distribution with proportion $0.5, 0.1, 0.1, 0.1, 0.1, 0.1$, whose values correspond to different distributions within the Bart Simpson distribution respectively.
+
+To illustrate the effect of different bandwidth $h$, we can use different breaks in **hist** function. Number of breaks is the number of cells for the histogram which is equivalent to $1/h$.
+
+```{r data}
+set.seed(111)
+library(MASS)
+pro <- c(0.5, 0.1, 0.1, 0.1, 0.1, 0.1)
+multi <- sample(1:6, 1000, replace = T, prob=pro)
+mu <- c(0, seq(-1,2,0.5))
+sigma <- c(1, rep(sqrt(1/10), 5))
+x <- NULL
+for (ii in 1:6) {
+  com_txt <- paste("com", ii, " <- rnorm(length(which(multi==", ii, ")), mean=", mu[ii], ", sd=", sigma[ii], ")",sep="")
+  eval(parse(text=com_txt))
+  com_txt <- paste("x <- c(x, com", ii, ")", sep="")
+  eval(parse(text=com_txt))
+}
+```
 ### Histogram
 ```{r}
-hist(x)
-hist(x, breaks="Scott")
-hist(x, breaks="FD")
+y <- seq(-4, 4, 0.01)
+z <- rep(0, 801)
+for (ii in 1:6) {
+  z <- z + pro[ii] * dnorm(y, mean=mu[ii], sd=sigma[ii])
+}
+for (breaks in c(10, 30, 120)) {
+  hist(x, breaks=breaks, freq=FALSE)
+  lines(y, z)
+  text(x=2, y=0.4, paste("breaks=", breaks))
+}
 ```
+
+The figure above shows the histogram of samples from Bart Simpson distribution with breaks = $10, 30, 120$, namely, $h=1/10, 1/30, 120$. 
+The solid line in the figure is true density function. 
+
+We find that the histograms underfit the true density function when breaks is small, while overfit the true density function with large breaks. The bar figure fit tight with moderate breaks only. 
+
 ### Naive Density Estimator
+
+The naive density estimate is
+\begin{equation}
+  \hat{f}_h(x) = \frac{1}{hn} \sum_{i=1}^n  K\left( \frac{X_i -x}{h} \right)
+\end{equation}
+where $K(x)=I(-1<x\le1)/2$.
+
+Let's try $h=0.01, 0.02, \dots, 1$ and compare the estimated funciton with true funtion.
+
+```{r naive}
+naive <- function(t, h){
+  # h is parameter
+  # t is variable
+  fhx <- 0
+  for (xx in x) {
+    if (abs(xx - t)/h < 1)
+      fhx <- fhx + 1
+  }
+  fhx / (2 * h * length(x))
+}
+
+for (h in c(0.05, 0.4,  2)) {
+  fh <- unlist(lapply(X=y, FUN=naive, h))
+  plot(y, z, "l", col="red", xlab="x", ylab="Density", xlim=c(-4,4), ylim=c(0,0.5))
+  lines(y, fh)
+  text(x=3, y=0.4, paste("h=",h), )
+}
+```
+
+The red line in the figures is true density function and the blue one is naive density estimator. 
+It's the same with the behavior of $h$ in histogram method. Only moderate $h$ fit the true function well.
+Too samll or too big $h$ will lead to overfitting or underfitting, respectively.
