@@ -1,5 +1,5 @@
 ---
-title: "Homework7"
+title: "Homework 7"
 author: "Liu Huihang"
 date: "10/22/2019"
 output: html_document
@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 ```
 
-## Problem 1
+## Problem 1 (Homework 7.1)
 
 Consider Bart Simpson density
 \begin{equation}
@@ -31,7 +31,6 @@ To illustrate the effect of different bandwidth $h$, we can use different breaks
 
 ```{r data}
 set.seed(111)
-library(MASS)
 pro <- c(0.5, 0.1, 0.1, 0.1, 0.1, 0.1)
 multi <- sample(1:6, 1000, replace = T, prob=pro)
 mu <- c(0, seq(-1,2,0.5))
@@ -44,6 +43,7 @@ for (ii in 1:6) {
   eval(parse(text=com_txt))
 }
 ```
+
 ### Histogram
 ```{r}
 y <- seq(-4, 4, 0.01)
@@ -51,14 +51,15 @@ z <- rep(0, 801)
 for (ii in 1:6) {
   z <- z + pro[ii] * dnorm(y, mean=mu[ii], sd=sigma[ii])
 }
-for (breaks in c(10, 30, 120)) {
+par(mfrow=c(2,2))
+for (breaks in c(10, 30, 70, 120)) {
   hist(x, breaks=breaks, freq=FALSE)
   lines(y, z)
   text(x=2, y=0.4, paste("breaks=", breaks))
 }
 ```
 
-The figure above shows the histogram of samples from Bart Simpson distribution with breaks = $10, 30, 120$, namely, $h=1/10, 1/30, 120$. 
+The figure above shows the histogram of samples from Bart Simpson distribution with breaks = $10, 30, 70, 120$, namely, $h=1/10, 1/30, 1/70, 1/120$. 
 The solid line in the figure is true density function. 
 
 We find that the histograms underfit the true density function when breaks is small, while overfit the true density function with large breaks. The bar figure fit tight with moderate breaks only. 
@@ -71,7 +72,7 @@ The naive density estimate is
 \end{equation}
 where $K(x)=I(-1<x\le1)/2$.
 
-Let's try $h=0.01, 0.02, \dots, 1$ and compare the estimated funciton with true funtion.
+Let's try $h=0.05, 0.4, 1, 2$ and compare the estimated funciton with true funtion.
 
 ```{r naive}
 naive <- function(t, h){
@@ -84,15 +85,76 @@ naive <- function(t, h){
   }
   fhx / (2 * h * length(x))
 }
-
-for (h in c(0.05, 0.4,  2)) {
+par(mfrow=c(2,2))
+for (h in c(0.05, 0.4, 1, 2)) {
   fh <- unlist(lapply(X=y, FUN=naive, h))
-  plot(y, z, "l", col="red", xlab="x", ylab="Density", xlim=c(-4,4), ylim=c(0,0.5))
+  plot(y, z, "l", lwd=2, col="red", xlab="x", ylab="Density", xlim=c(-4,4), ylim=c(0,0.5))
   lines(y, fh)
   text(x=3, y=0.4, paste("h=",h), )
+  title("Naive Density Estimate")
 }
 ```
 
 The red line in the figures is true density function and the blue one is naive density estimator. 
 It's the same with the behavior of $h$ in histogram method. Only moderate $h$ fit the true function well.
 Too samll or too big $h$ will lead to overfitting or underfitting, respectively.
+
+## Problem 2 (Homework 7.3)
+Generate 1000 samples from distribution $0.3N(0,1)+0.7N(1,0.32)$,  draw one figure with different estimated density functions with different bandwidth $h$ where $h$ is given by \emph{kedd}.
+
+## Answer 2
+
+### Data Preparation
+
+We generate samples from binnomial distribution with proportion $0.3, 0.7$, whose values correspond to different distributions within the Bart Simpson distribution respectively.
+
+
+```{r data2}
+library(kedd)
+set.seed(111)
+pro <- c(0.3, 0.7)
+multi <- sample(1:2, 100, replace = T, prob=pro)
+mu <- c(0, 1)
+sigma <- c(1, 0.3)
+x <- NULL
+for (ii in 1:2) {
+  com_txt <- paste("com", ii, " <- rnorm(length(which(multi==", ii, ")), mean=", mu[ii], ", sd=", sigma[ii], ")",sep="")
+  eval(parse(text=com_txt))
+  com_txt <- paste("x <- c(x, com", ii, ")", sep="")
+  eval(parse(text=com_txt))
+}
+```
+
+### Bandwidth selection
+
+We conside $h$ to optimize AMISE, maximum likelihood cross-validation,unbiased cross-calidation, biased cross-calidation, complete cross-calidation, modified cross-calidation,trimmed cross-calidation. 
+
+The values of these method is shown following, 
+
+
+```{r}
+amise <- h.amise(x, deriv.order = 0)$h
+mlcv <- h.mlcv(x)$h;ucv <- h.ucv(x)$h; bcv <- h.bcv(x)$h; 
+ccv <- h.ccv(x)$h; mcv <- h.mcv(x)$h; tcv <-  h.tcv(x)$h
+h <- c(amise=amise, mlcv=mlcv, ucv=ucv, bcv=bcv, ccv=ccv, mcv=mcv,tcv=tcv)
+print(round(h, 4))
+```
+
+
+### Draw figure
+
+We can generate KDE by **dkde** function with defalut parameters and draw then in one figure as following.
+
+```{r}
+y <- seq(-4, 4, 0.01)
+z <- rep(0, length(y))
+for (ii in 1:2) {
+  z <- z + pro[ii] * dnorm(y, mean=mu[ii], sd=sigma[ii])
+}
+plot(y, z, "l", lty=2, lwd=2, col=1, xlab="x", ylab="Density", xlim=c(-3,4), ylim=c(0,1))
+for (ii in 1:7) {
+  lines(dkde(x, h=h[ii]), col=ii+1, lwd=2)
+}
+legend("topright", legend=c("true","amise","mlcv","ucv","bcv","ccv","mcv","tcv"), col=1:8, lty=c(2, rep(1,7)))
+title("KDE with different h")
+```

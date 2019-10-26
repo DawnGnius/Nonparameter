@@ -1,0 +1,291 @@
+---
+title: "Homework 8"
+author: "Liu Huihang"
+date: "10/22/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+## Problem 1 (Homework 8.2)
+
+Generate 1000 samples from distribution $0.3N(0,1)+0.7N(1,0.32)$,  draw one figure with different estimated derivative density functions with different bandwidth $h$ where $h$ is given by \emph{kedd}.
+
+## Answer 1
+
+### Data Preparation
+
+We generate samples from binnomial distribution with proportion $0.3, 0.7$, whose values correspond to different distributions within the Bart Simpson distribution respectively.
+
+
+```{r data2}
+library(kedd)
+set.seed(111)
+pro <- c(0.3, 0.7)
+multi <- sample(1:2, 100, replace = T, prob=pro)
+mu <- c(0, 1)
+sigma <- c(1, 0.3)
+x <- NULL
+for (ii in 1:2) {
+  com_txt <- paste("com", ii, " <- rnorm(length(which(multi==", ii, ")), mean=", mu[ii], ", sd=", sigma[ii], ")",sep="")
+  eval(parse(text=com_txt))
+  com_txt <- paste("x <- c(x, com", ii, ")", sep="")
+  eval(parse(text=com_txt))
+}
+```
+
+### Bandwidth selection
+
+We conside $h$ to optimize AMISE, maximum likelihood cross-validation,unbiased cross-calidation, biased cross-calidation, complete cross-calidation, modified cross-calidation,trimmed cross-calidation. 
+
+The values of these method is shown following, 
+
+
+```{r}
+amise <- h.amise(x, deriv.order = 1)$h
+mlcv <- h.mlcv(x, deriv.order = 1)$h;
+ucv <- h.ucv(x, deriv.order = 1)$h; 
+bcv <- h.bcv(x, deriv.order = 1)$h; 
+ccv <- h.ccv(x, deriv.order = 1)$h; 
+mcv <- h.mcv(x, deriv.order = 1)$h; 
+tcv <-  h.tcv(x, deriv.order = 1)$h
+h <- c(amise=amise, mlcv=mlcv, ucv=ucv, bcv=bcv, ccv=ccv, mcv=mcv,tcv=tcv)
+print(round(h, 4))
+```
+
+
+### Draw figure
+
+We can generate DKDE by **dkde** function with defalut parameters and draw then in one figure as following.
+
+```{r}
+y <- seq(-4, 4, 0.01)
+z <- rep(0, length(y))
+for (ii in 1:2) {
+  z <- z + pro[ii] * dnorm(y, mean=mu[ii], sd=sigma[ii]) * (mu[ii]-y) / sigma[ii]^2
+}
+plot(y, z, "l", lty=2, lwd=2, col=1, xlab="x", ylab="Density" , xlim=c(-3,4), ylim=c(-2,2)) 
+for (ii in 1:7) {
+  lines(dkde(x, h=h[ii], deriv.order = 1), col=ii+1, lwd=2)
+}
+legend("top", ncol=8, bty="n", cex=0.72, legend=c("true","amise","mlcv","ucv","bcv","ccv","mcv","tcv"), col=1:8, lty=c(2, rep(1,7)))
+title("DKDE with different h")
+```
+
+
+## Problem 2 (Homework 8.3)
+
+Write program to draw the figure of 21 pages of courseware.
+(Referring algorithm steps in reading materials)
+
+## Answer 2
+
+### Data preparation
+
+```{r}
+set.seed(113)
+n <- 100              # sample size
+h <- 0.3
+c <- 0.5              # default
+x <- seq(1, 1500)/100 # real sequence
+density <- dlnorm(x)  # true density function
+X <- rlnorm(n)
+```
+
+### Sample point KDE
+
+We use the algorithem intruducted in reference material. 
+
+1. Calculate $\hat{f}(x, h)$ in the usual way.
+
+2. Determine a modification parameter $s_i, i = 1, 2, \dots , n$, as
+\begin{equation}
+  s_{i}=\left(\frac{\hat{f}\left(X_{i}, h\right)}{T}\right)^{-c}
+\end{equation}
+where $c \ge 0$ and T is the geometric mean of the values of the KDE of all data points, that is $\hat{f}(X_i, h)$
+and 
+\begin{equation}
+  T=\exp \left(\frac{1}{n} \sum_{i=1}^{n} \ln \left(\hat{f}\left(X_{i}, h_{1}\right)\right)\right)
+\end{equation}
+
+3. Finally, the sample point KDE is defined in the following way
+\begin{equation}
+  \hat{f}(x, h)=\frac{1}{n h} \sum_{i=1}^{n} \frac{1}{s_{i}} K\left(\frac{x-X_{i}}{h s_{i}}\right).
+\end{equation}
+
+The following code is used to calculate Classical KDE and Sample Point KDE, where $kde.const$
+```{r}
+kde.const <- dkde(x=X, h=h) # Using dkde to estimate with const h
+T <- exp(mean(log(dkde(x=X, y=X, h=h)$est.fx)))
+s <- (dkde(x=X, y=X, h=h)$est.fx / T)^(-c)
+kde.sp.f <- function(x){
+  re <- NULL
+  for (xx in x) {
+    re <- c(re, mean(dnorm((xx-X)/h/s)/s) / h)
+  }
+  re
+}
+kde.sp <- kde.sp.f(kde.const$eval.points)
+```
+
+### Draw figure
+```{r}
+par(mfrow=c(1,2), pty="s")
+plot(x, density, "l", lty=2, lwd=2, xlab="x", ylab="Density", main=expression(h == const))
+lines(kde.const, col=1, lwd=2)
+plot(x, density, "l", lty=2, lwd=2, xlab="x", ylab="Density", main=expression(h != const))
+lines(kde.const$eval.points, kde.sp, col=1, lwd=2)
+```
+
+
+## Problem 3 (Homework 8.4)
+
+Reade accessory materials. Write program to realize the result in 39 pages of slide. (Reading material,
+Figure 3)
+
+## Answer 3
+
+For simplicity, take $K$ to be a symmetric probability density with support $[-1,1]$. We choose a 
+<!-- quadratic kernel $K(x)=\frac{3}{4}(-x^2+1)$ -->
+quartic kernel (Biweight) $\frac{15}{16}(1-x^2)^2\cdot I(|x|<1)$
+, $\int_{-1}^1 K(x) dx = 1$. 
+
+And we calculate $a_l(p), b(p), c_l(p), e(p), g(p)$ as described in the reference book as following. 
+These function is calculated simply, details is omited here.
+
+I adjust the integration interval to $[-1+2p, p]$, $K(\cdot)=0$ otherwise, in case of $K_{R1}$.
+
+All of the boundery kernels have similar bias, var and MSE curves.
+
+```{r}
+a <- function(p, l=1, d=0){
+  if (l==0)
+    return(((p + 1)^3*(3*p^2 - 9*p + 8))/16)
+  if (l==1)
+    return((5*(p^2 - 1)^3)/32)
+  if (l==2)
+    return((15*p^7)/112 - (3*p^5)/8 + (5*p^3)/16 + 1/14)
+}
+
+b <- function(p){
+  (5*(p + 1)^5*(35*p^4 - 175*p^3 + 345*p^2 - 325*p + 128))/1792
+}
+
+K <- function(x){
+  if(x<=1 & x>=-1){
+    return(15/16*(1-x^2)^2)
+  } else {
+    return(0)
+    # return(15/16*(1-x^2)^2)
+  }
+}
+
+c.PD <- function(p, l=1){
+  if (l==0)
+    return((3*p^5)/4 - (5*p^3)/4 - 1/2)
+  if (l==1)
+    return((5*(p^2 - 1)^2*(2*p^2 + 1))/16)
+  if (l==2)
+    return((15*p^7)/28 - (3*p^5)/4 - 3/14)
+}
+
+e.PD <- function(p){
+  (25*p^9)/64 - (675*p^7)/448 + (135*p^5)/64 - (75*p^3)/64 - 5/28
+}
+
+g.PD <- function(p){
+  (25*p^9)/16 - (225*p^7)/56 + (45*p^5)/16 + 5/14
+}
+
+c.L <- function(p, l=1){
+  if (l==0)
+    return((5*(p^2 - 1)^3)/32)
+  if (l==1)
+    return((15*p^7)/112 - (3*p^5)/8 + (5*p^3)/16 + 1/14)
+  if (l==2)
+    return((5*(p^2 - 1)^3*(3*p^2 + 1))/128)
+}
+
+e.L <- function(p){
+  (45*(p^2 - 1)^5)/512
+}
+
+g.L <- function(p){
+  (225*p^11)/2816 - (25*p^9)/64 + (675*p^7)/896 - (45*p^5)/64 + (75*p^3)/256 + 5/154
+}
+
+c.D <- function(p, l=1){
+  if (l==0)
+    return((15*(p^2 - 1)^2)/16)
+  if (l==1)
+    return((3*p^5)/4 - (5*p^3)/4 - 1/2)
+  if (l==2)
+    return((5*(p^2 - 1)^2*(2*p^2 + 1))/16)
+}
+
+e.D <- function(p){
+  (225*(p^2 - 1)^4)/512
+}
+
+g.D <- function(p){
+  (225*p^7)/112 - (45*p^5)/8 + (75*p^3)/16 + 15/14
+}
+
+c.R1 <- function(p, l=1){
+  if (l==0) #return(((p + 1)^3*(3*p^2 - 9*p + 8))/16)
+    return(-((p - 1)^3*(3*p^2 + 9*p + 8))/16)
+    # return(((p + 1)^3*(93*p^2 - 39*p + 8))/16)
+  if (l==1) #return(((p + 1)^3*(7*p^3 - 21*p^2 + 17*p + 5))/32)
+    return(-((p - 1)^3*(7*p^3 + 21*p^2 + 17*p - 5))/32)
+    # return(((p + 1)^3*(57*p^3 - 171*p^2 + 47*p - 5))/32)
+  if (l==2) #return(((p + 1)^3*(29*p^4 - 87*p^3 + 62*p^2 + 46*p + 8))/112)
+    return(-((p - 1)^3*(29*p^4 + 87*p^3 + 62*p^2 - 46*p + 8))/112)
+    # return(((p + 1)^3*(99*p^4 - 297*p^3 + 482*p^2 - 94*p + 8))/112)
+}
+
+e.R1 <- function(p){
+  # (5*(p + 1)^5*(p^4 - 5*p^3 + 9*p^2 - 5*p + 1))/14
+  return(-(5*(p - 1)^5*(p^4 + 5*p^3 + 9*p^2 + 5*p + 1))/14)
+  # return((5*(p + 1)^5*(p^4 - 5*p^3 + 9*p^2 - 5*p + 1))/14)
+}
+
+g.R1 <- function(p){
+  # (5*(p + 1)^5*(17885*p^4 - 8785*p^3 + 3495*p^2 - 955*p + 128))/1792
+  return(-(5*(p - 1)^5*(35*p^4 + 175*p^3 + 345*p^2 + 325*p + 128))/1792)
+  # return((5*(p + 1)^5*(35*p^4 - 175*p^3 + 345*p^2 - 325*p + 128))/1792)
+}
+
+B <- function(p, a, c){
+  (c(p,1)*a(p,2) - a(p,1)*c(p,2)) / (c(p,1)*a(p,0) - a(p,1)*c(p,0))
+}
+
+V <- function(p, a, b, c, e, g){
+  (c(p,1)*c(p,1)*b(p) - 2*c(p,1)*a(p,1)*e(p) + a(p,1)*a(p,1)*g(p)) / (c(p,1)*a(p,0) - a(p,1)*c(p,0))^2
+}
+
+MSE <- function(p, B=B, V=V, a=a, b=b, c=c.PD, e=e.PD, g=g.PD){
+  ((B(p, a, c)*(V(p, a, b, c, e, g))^2)^2)^(1/5)
+}
+
+# Draw the figure
+par(mfcol=c(1,3), pty="s")
+p <- seq(1,100)/100
+# Bias
+plot(p, unlist(lapply(p, B, a=a, c=c.PD)), "l", main="Bias", ylab="Bias")
+lines(p, unlist(lapply(p, B, a=a, c=c.L)), "l")
+lines(p, unlist(lapply(p, B, a=a, c=c.D)), "l")
+lines(p, unlist(lapply(p, B, a=a, c=c.R1)), "l")
+# Variance
+plot(p, unlist(lapply(p, V, a=a, b, c=c.PD, e=e.PD, g=g.PD)), "l", main="Var", ylab="Variance")
+lines(p, unlist(lapply(p, V, a=a, b, c=c.L, e=e.L, g=g.L)), "l")
+lines(p, unlist(lapply(p, V, a=a, b, c=c.D, e=e.D, g=g.D)), "l")
+lines(p, unlist(lapply(p, V, a=a, b, c=c.R1, e=c.R1, g=g.R1)), "l")
+# MSE
+plot(p, unlist(lapply(p, MSE, B=B, V=V, a=a, b, c=c.PD, e=e.PD, g=g.PD)), "l", main="MSE", ylab="MSE")
+lines(p, unlist(lapply(p, MSE, B=B, V=V, a=a, b, c=c.L, e=e.L, g=g.L)), "l")
+lines(p, unlist(lapply(p, MSE, B=B, V=V, a=a, b, c=c.D, e=e.D, g=g.D)), "l")
+lines(p, unlist(lapply(p, MSE, B=B, V=V, a=a, b, c=c.R1, e=c.R1, g=g.R1)), "l")
+```
