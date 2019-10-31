@@ -1,0 +1,195 @@
+---
+title: "Homework 9"
+author: "Liu Huihang"
+date: "10/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+## Problem 1 (HW 9.1)
+For the data set **faithful** in R, use the normal mixed model to estimate the joint density function of **eruptions** and **waiting**, write your EM algorithm, and compare it with the **normalmixEM** function in the **mixtools** package.
+
+
+## Problem 2 (HW 9.2)
+
+Write a density estimation function using **knn.dist** function in the **FNN** package, and perform k-nearest neighbor density estimation on the data in Problem 1.
+
+
+## Answer 1
+
+Let's have a insight of the faithful data,
+```{r}
+data("faithful")
+ggplot(faithful, aes(x = eruptions, y = waiting)) + geom_point() + stat_density2d()
+```
+
+This is a Gaussian mixture of $K$ components, 
+\begin{equation}
+  p(x|\Psi) = \sum_{k=1}^{K} \pi_k \phi(x|\mu_k, \sigma_k), 
+\end{equation}
+the parameters
+\begin{equation}
+  \Psi = \left\{ (\pi_1, \mu_1, \Sigma_1),\dots (\pi_K, \mu_K, \Sigma_K) \right\}
+\end{equation}
+The complete likelihood function becomes
+\begin{equation}
+  L(\Psi) = \prod_{i=1}^n \prod_{k=1}^K  \left[ \pi_k\cdot \phi(x_i| \mu_k,\Sigma_k)\right]^{z_k}
+\end{equation}
+and the complete log-likelihood function becomes
+\begin{equation}
+  \begin{split}
+    ln(L) 
+    & = \sum_{i=1}^n \sum_{k=1}^K z_k \left[ ln(\pi_k) + ln\phi(x_i| \mu_k,\Sigma_k)\right] \\
+    & = \sum_{i=1}^n \sum_{k=1}^K z_k \left[ ln(\pi_k) + C - \frac{1}{2}ln|\Sigma_k| - \frac{1}{2} tr\left[ \Sigma_k^{-1} (x_i -\mu_k)(x_i -\mu_k)^T \right] \right] \\
+    & \propto \sum_{i=1}^n \sum_{k=1}^K z_k \left[ ln(\pi_k) - \frac{1}{2}ln|\Sigma_k| - \frac{1}{2} tr\left[ \Sigma_k^{-1} (x_i -\mu_k)(x_i -\mu_k)^T \right] \right] \\
+  \end{split}
+\end{equation}
+
+- E Step
+
+\begin{equation}
+  \hat{z}_{ik} = \frac{\pi_k \phi(x_i | \mu_k, \sigma_k)}{\sum_{m=1}^2 \pi_m \phi(x_i | \mu_m, \sigma_m)}
+\end{equation}
+
+- M Step
+
+\begin{equation}
+  \begin{split}
+    \hat{\pi}_k^{new} & = \frac{\sum_{i=1}^n \hat{z}_{ik}}{n} \\
+    \hat{\mu}_k^{new} & = \frac{\sum_{i=1}^n \hat{z}_{ik}x_i}{\sum_{i=1}^n \hat{z}_{ik}} \\
+    \hat{\Sigma}_k^{new} & = \frac{\sum_{i=1}^n \hat{z}_{ik} (x_i-\hat{\mu}_k)^T(x_i-\hat{\mu}_k)}{\sum_{i=1}^n \hat{z}_{ik}} \\
+  \end{split}
+\end{equation}
+
+The algrithem is initialized randomly. 
+
+```{r}
+# load data
+library("mvtnorm") # multi-normal 
+data("faithful")
+head(faithful, 5)
+x <- data.matrix(faithful)
+
+# initialization
+set.seed(111)
+n <- 272
+K <- 2
+Dim <- 2
+eps <- 1e-4
+Pi <- c(0.5, 0.5)
+mu <- rep(0, Dim*K); dim(mu) <- c(Dim, K)
+Sig <- rep(0, Dim*Dim*K); dim(Sig) <- c(Dim, Dim, K)
+
+mu_tmp <- matrix(c(2,55, 4.5, 80), 2, 2)
+for (k in 1:K) {
+  Sig[,,k] <- t(x-t(colMeans(x)%*%t(matrix(rep(1, n), nrow=n))))%*%(x-t(colMeans(x)%*%t(matrix(rep(1, n), nrow=n))))/n + diag(abs(rnorm(2)))*5 # t(scale(x, center=TRUE, scale=FALSE))%*%scale(x, center=TRUE, scale=FALSE)
+  mu[,k] <- mu_tmp[, k] # colMeans(x) + rnorm(2)*5
+}
+
+# EM Algorithm
+e_step <- function(Pi, mu, Sig){
+  zz <- rep(0, n*K); dim(zz) <- c(n, K)
+  for (ii in 1:n) {
+    for (k in 1:K) {
+      zz[ii, k] <- Pi[k]*dmvnorm(x[ii,], mean=mu[,k], sigma=Sig[,,k])
+    }
+    tmp <- sum(zz[ii,])
+    for (k in 1:K) {
+      zz[ii, k] <- zz[ii, k] / tmp
+    }
+  }
+  return(zz)
+}
+
+m_step <- function(zz){
+  Pi <- colMeans(zz)
+  for (k in 1:K) { 
+    mu[,k] <- colSums(matrix(unlist(lapply(1:n, function(ii) zz[ii,k] * x[ii,])), nrow=n, byrow=TRUE)) / colSums(zz)[k]
+    Sig[,,k] <- matrix(colSums(matrix(unlist(lapply(1:n, function(ii) zz[ii,k] * t(t(x[ii,]-mu[,k]))%*%t(x[ii,]-mu[,k]) )), nrow=n, byrow=TRUE)), nrow=Dim) / colSums(zz)[k]
+  }
+  return(list(Pi, mu, Sig))
+}
+
+iter_num <- 0
+while (TRUE) {
+  z <- e_step(Pi, mu, Sig)
+  re <- m_step(z)
+  Pi_new <- re[[1]]; mu_new <- re[[2]]; Sig_new <- re[[3]]
+  if (norm(matrix(Pi_new-Pi))<eps & norm(mu-mu_new)<eps & norm(Sig[,,1]-Sig_new[,,1])<eps & norm(Sig[,,2]-Sig_new[,,2])<eps) break
+  Pi <- Pi_new; mu <- mu_new; Sig <- Sig_new
+  iter_num <- iter_num + 1
+}
+cat("number of iterations = ", iter_num, "\n")
+print(Pi)
+print(mu)
+print(Sig)
+```
+
+Let's have a look at the results from **mixtools** package. The **mvnormalmixEM** function returns EM algorithm output for mixtures of multivariate normal distributions. We can use its default parameters and get the following result.
+```{r}
+library("mixtools")
+result.EM = mvnormalmixEM(x, k=2)
+print(result.EM$lambda)
+print(result.EM$mu)
+print(result.EM$sigma)
+```
+
+We can conclude that, my EM algorithm performs as well as **mixtools** package because they return the same parameters $\pi_k,\mu_k,\Sigma_k$. 
+
++---------------+-----------------+---------------------+-------------------+
+| Method        | $\pi$           | $\mu$               |  $\Sigma$         |
++===============+=================+=====================+===================+
+| My EM Alg.    | - $0.3559$      | - $(2.0363,54.478)$ | - $\begin{pmatrix} 0.06917 & 0.4352\\ 0.4352 & 33.697 \end{pmatrix}$ |
+|               | - $0.6441$      | - $(4.2896,79.968)$ | - $\begin{pmatrix} 0.1700 & 0.9406\\ 0.9406 & 36.046 \end{pmatrix}$  |
++---------------+-----------------+---------------------+-------------------+
+| mixtools      | - $0.3559$      | - $(2.0363,54.479)$ | - $\begin{pmatrix} 0.06917 & 0.4352\\ 0.4352 & 33.697 \end{pmatrix}$ |
+|               | - $0.6441$      | - $(4.2897,79.968)$ | - $\begin{pmatrix} 0.1700 & 0.9406\\ 0.9406 & 36.046 \end{pmatrix}$  |
++---------------+-----------------+---------------------+-------------------+
+
+But we should notice that the EM algorithm is sensitive to initial values of parameters, if we choose parameters randomly, the algorithm may not converge that quickly. 
+
+
+
+## Answer 2
+**knn.dist** function in **FNN* package is a fast k-nearest neighbor distance searching algorithms returns the Euclidiean distances of k nearest neighbors. 
+```{r}
+library("FNN")
+library("parallel")
+
+k <- 10
+# kdist <- knn.dist(x, k=k)
+f.knn <- function(t){
+  h <- knnx.dist(data=x, query=t, k=k)[1,10]
+  idx_t <- knnx.index(data=x, query=t, k=k)
+  fhx <- 0
+  for (ii in 1:dim(idx_t)[2]) {
+    if (norm(x[idx_t[ii],] - t, "2") / h < 1)
+      fhx <- fhx + 1 / h
+  }
+  fhx / (2*length(x))
+}
+yy <- seq(1, 5.5, 0.01)
+zz <- seq(40, 100, 0.5)
+///outer(x, y, f)
+f.hat <- matrix(rep(0, length(yy)*length(zz)), nrow=length(yy))
+ex <- function(ii){
+  unlist(lapply(1:length(zz), function(jj, y) {
+                                      tt <- matrix(c(y, zz[jj]), nrow=1)
+                                      return(f.knn(tt))
+                            }, yy[ii]))
+}
+cl <- makeCluster(getOption("cl.cores", as.integer(detectCores()/2)))
+clusterExport(cl, c('f.knn', 'x', 'yy', 'zz', 'k', 'knnx.dist', 'knnx.index'))                # include all the function needed
+res <- parSapply(cl, 1:length(yy), ex)
+stopCluster(cl)
+
+# draw density  fucntion
+library("plotly")
+
+plot_ly() %>%
+add_surface(z = ~res)
+```
