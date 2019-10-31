@@ -69,7 +69,7 @@ The algrithem is initialized randomly.
 
 ```{r}
 # load data
-library("mvtnorm") # multi-normal 
+library("mvtnorm") # multi-normal density function
 data("faithful")
 head(faithful, 5)
 x <- data.matrix(faithful)
@@ -129,9 +129,15 @@ print(mu)
 print(Sig)
 ```
 
-Let's have a look at the results from **mixtools** package. The **mvnormalmixEM** function returns EM algorithm output for mixtures of multivariate normal distributions. We can use its default parameters and get the following result.
+The results show that the algorithm iterates 13 times and then converges. It has two compoents and their ratio is $\pi=(0.3558731, 0.6441269)$, each binary normal distribution has $\mu, \Sigma$ as shown above.
+
+Now, let's take a look at the results from **mixtools** package. The **mvnormalmixEM** function returns EM algorithm output for mixtures of multivariate normal distributions. We can use its default parameters and get the following result.
 ```{r}
 library("mixtools")
+```
+
+Because this problem is a binary normal distribution, we use **mvnormalmixEM** rather than **normalmixEM**. It is very simple to use the result is shown in the following.
+```{r}
 result.EM = mvnormalmixEM(x, k=2)
 print(result.EM$lambda)
 print(result.EM$mu)
@@ -156,6 +162,15 @@ But we should notice that the EM algorithm is sensitive to initial values of par
 
 ## Answer 2
 **knn.dist** function in **FNN* package is a fast k-nearest neighbor distance searching algorithms returns the Euclidiean distances of k nearest neighbors. 
+And we have **knnx.dist** and **knnx.index** to evulate knn at input $x$ and return neighbours' indexes and distances.
+
+The algorithm is very simple, we just need to do some simple calculate to evaluate $\hat{f}(x)$ at some different position.
+\begin{equation}
+  \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{2d_k(x)} I(|x-X_i|\le d_k(x))
+\end{equation}
+
+I take $k=10$ emperically.
+
 ```{r}
 library("FNN")
 library("parallel")
@@ -163,6 +178,7 @@ library("parallel")
 k <- 10
 # kdist <- knn.dist(x, k=k)
 f.knn <- function(t){
+  # t <- matrix(c(yy, zz), nrow=1)
   h <- knnx.dist(data=x, query=t, k=k)[1,10]
   idx_t <- knnx.index(data=x, query=t, k=k)
   fhx <- 0
@@ -172,9 +188,8 @@ f.knn <- function(t){
   }
   fhx / (2*length(x))
 }
-yy <- seq(1, 5.5, 0.01)
-zz <- seq(40, 100, 0.5)
-///outer(x, y, f)
+yy <- seq(1, 5.5, length.out=30)
+zz <- seq(40, 100, length.out=30)
 f.hat <- matrix(rep(0, length(yy)*length(zz)), nrow=length(yy))
 ex <- function(ii){
   unlist(lapply(1:length(zz), function(jj, y) {
@@ -186,10 +201,12 @@ cl <- makeCluster(getOption("cl.cores", as.integer(detectCores()/2)))
 clusterExport(cl, c('f.knn', 'x', 'yy', 'zz', 'k', 'knnx.dist', 'knnx.index'))                # include all the function needed
 res <- parSapply(cl, 1:length(yy), ex)
 stopCluster(cl)
+```
 
+We use **plotly** package to draw 3d surface of density function as following.
+```{r}
 # draw density  fucntion
 library("plotly")
-
 plot_ly() %>%
 add_surface(z = ~res)
 ```
