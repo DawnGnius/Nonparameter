@@ -1,0 +1,167 @@
+---
+title: "Homework 10"
+author: "Liu Huihang"
+date: "10/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# library(ggplot2)
+library("plotly")
+library("parallel")
+```
+
+## Exercise 1 (HW 10.1)
+
+For the data set **faithful** in R, use the product sum kernel and spherical symmetric kernel to estimate the joint density function of *erosions* and *waiting*, respectively, considering different bandwidth selection methods.
+
+## Answer 1
+In this case, the data lies in $\mathcal{R^2}$ thus we take $d=2$ in the following.
+
+- Multiplicative kernel
+\begin{equation}
+  \mathcal{K}(\mathbf{u})
+  = \left( \frac{3}{4} \right)^d \prod_{i=1}^d (1- \mu_i^2) I(|\mu_i| \le 1)
+  = \frac{9}{16} \prod_{i=1}^2 (1- \mu_i^2) I(|\mu_i| \le 1)
+\end{equation}
+
+- Spherical symmetric kernel
+\begin{equation}
+  \mathcal{K}(\mathbf{u}) 
+  = \frac{(1-\mathbf{u}^T\mathbf{u}) I(\mathbf{u}^T\mathbf{u}\le 1)}{\int_{\mathcal{R}^d} (1-\mathbf{u}^T\mathbf{u}) I(\mathbf{u}^T\mathbf{u}\le 1) d\mathbf{u}} 
+  = \frac{(1-\mathbf{u}^T\mathbf{u}) I(\mathbf{u}^T\mathbf{u}\le 1)}{\pi/2} 
+\end{equation}
+
+The multivariate kernel density estimator
+\begin{equation}
+\hat{f}_{\mathbf{H}} (\mathbf{x}) = \frac{1}{n} \sum_{i=1}^n \frac{1}{det(\mathbf{H})} \mathcal{K} \left(\mathbf{H}^{-1} (\mathbf{x} - \mathbf{X_i}) \right)
+\end{equation}
+
+In addition, the bandwidth is choosen by
+\begin{equation}
+  \begin{split}
+    \hat{h}_{plug-in} & = \left(\frac{4}{d+2}\right)^{1/(d+4)} \sigma_j n^{1/(d+4)}\\
+    \hat{h}_{scott} & = \sigma_j n^{1/(d+4)}\\
+    \hat{h}_{g.scott} & = \hat{\Sigma}^{1/2} n^{1/(d+4)}\\
+  \end{split}
+\end{equation}
+```{r}
+data("faithful")
+dat <- data.matrix(faithful)
+n <- dim(dat)[1]
+Dim <- 2
+
+multip.kernel <- function(u){
+  # u is a vector in 2-dim
+  (1-u[1])*(1-u[2])*9/16
+}
+
+sphi.kernel <- function(u){
+  # u is a vector in 2-dim
+  (1-t(u)%*%u)*2/pi
+}
+
+kde.multiple <- function(u, H){
+  fhx <- 0
+  for (ii in 1:n) {
+    xx <- solve(H) %*% (u - dat[ii, ])
+    if (abs(xx[1]) <=1 & abs(xx[2]) <=1)
+      fhx <- fhx + 1
+  }
+  fhx <- fhx / n / det(H)
+}
+
+kde.sphi <- function(u, H){
+  fhx <- 0
+  for (ii in 1:n) {
+    xx <- solve(H) %*% (u - dat[ii, ])
+    if (norm(xx, "2") <= 1)
+      fhx <- fhx + 1
+  }
+  fhx <- fhx / n / det(H)
+}
+
+x <- seq(1, 5.5, length.out=30)
+y <- seq(40, 100, length.out=30)
+f.hat.multiple <- matrix(rep(0, length(x)*length(y)), nrow=length(x))
+f.hat.sphi <- matrix(rep(0, length(x)*length(y)), nrow=length(x))
+
+# bandwith selection
+Sig <- cov(dat)
+H.plug_in <- diag(diag(sqrt(Sig))) * n^(-1/6) * (4 / 6)^(1/6)
+H.scott <- diag(diag(sqrt(Sig))) * n^(-1/6)
+H.g_scott <- Sig^(1/2) * n^(-1/6)
+
+estimate <- function(H){
+  # single core code
+  for(ii in 1:length(x)){
+    for (jj in 1:length(y)) {
+      u <- c(x[ii], y[jj])
+      f.hat.multiple[ii, jj] <- kde.multiple(u, H)
+      f.hat.sphi[ii, jj] <- kde.sphi(u, H)
+    }
+  }
+
+  # # more cores code
+  # ex.multiple <- function(ii){
+  #   # ii: different index of x
+  #   # jj: index of y
+  #   unlist(lapply(1:length(y), function(jj, xx) {
+  #                                       u <- c(xx, y[jj])
+  #                                       return(kde.multiple(u, H))
+  #                             }, x[ii]))
+  # }
+  # ex.sphi <- function(ii){
+  #   # ii: different index of x
+  #   # jj: index of y
+  #   unlist(lapply(1:length(y), function(jj, xx) {
+  #                                       u <- c(xx, y[jj])
+  #                                       return(kde.multiple(u, H))
+  #                             }, x[ii]))
+  # }
+  # cl <- makeCluster(getOption("cl.cores", as.integer(detectCores()/2)))
+  # clusterExport(cl, c('dat' ,'x' , 'y', 'H.plug_in', 'H.scott', 'H.g_scott', 'n', 'kde.sphi', 'kde.multiple', 'sphi.kernel', 'sphi.kernel'))                # include all the function needed
+  # f.hat.multiple <- parSapply(cl, 1:length(x), ex.multiple)
+  # stopCluster(cl)
+  # 
+  # cl <- makeCluster(getOption("cl.cores", as.integer(detectCores()/2)))
+  # clusterExport(cl, c('dat' ,'x' , 'y', 'H.plug_in', 'H.scott', 'H.g_scott', 'n', 'kde.sphi', 'kde.multiple', 'sphi.kernel', 'sphi.kernel'))                # include all the function needed
+  # f.hat.sphi <- parSapply(cl, 1:length(x), ex.sphi)
+  # stopCluster(cl)
+  
+  plot_ly() %>% add_surface(z = ~f.hat.multiple)
+  
+  plot_ly() %>% add_surface(z = ~f.hat.sphi)
+}
+
+estimate(H.plug_in)
+estimate(H.scott)
+estimate(H.g_scott)
+
+```
+
+## Exercise 2 (HW 10.2)
+Suppose $X_1,\ldots.X_n$ i.i.d obeys the unary density $f(x)$. The random variable $U$ obeys a uniform distribution over $\{1,2,...,n\}$, let $Y=X_U+hZ$, where $Z$ has the density $p(x)$ And independent of $X_1,\ldots.X_n$ and $U$.
+
+(1) Prove that under the given conditions of $X_1, \dots,X_n$, $Y$ has a density $f^(\cdot)$, which is a kernel estimate based on the samples $X_1, \dots,X_n$ and the kernel function $p(\cdot)$ and the bandwidth $h$.
+
+(2) Find the variance of $f^(\cdot)$ given the conditions of $X_1, \dots,X_n$. How does it compare with the variance of the samples based on $X_1, \dots,X_n$?
+
+## Exercise 3 (HW 10.3)
+For the **wines** data, remove the categorical variable vintage and normalize the variables, then perform PCA. 
+Using the clustering method based on density estimation (refer to Appendix cluster.R),
+
+(1) How many classes can be found using 3 principal components? 
+What happens if the *min.clust.size* variable is set to a minimum class containing at least $5\%$ of the data? 
+Is the result sensitive to the value of *min.clust.size*?
+
+(2) Using the same min.clust.size value, using $6$ principal components, can you find several classes? 
+Use a two-two scatter plot to identify the principal components that contribute to the clustering, as well as the principal components that are not helpful.
+
+(3) Using two principal components for clustering, can you find several classes? 
+Compare the results of $2$ principal components and $3$ principal components.
+
+(4) Compare clustering results with real categories.
+
+(5) Compare the results of $k=3, 4$ under the kmeans clustering algorithm.
