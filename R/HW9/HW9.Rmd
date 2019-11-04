@@ -188,8 +188,8 @@ f.knn <- function(t){
   }
   fhx / (2*length(x))
 }
-yy <- seq(1, 5.5, length.out=30)
-zz <- seq(40, 100, length.out=30)
+yy <- seq(1, 5.5, length.out=20)
+zz <- seq(40, 100, length.out=20)
 f.hat <- matrix(rep(0, length(yy)*length(zz)), nrow=length(yy))
 ex <- function(ii){
   unlist(lapply(1:length(zz), function(jj, y) {

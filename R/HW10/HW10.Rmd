@@ -7,7 +7,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# library(ggplot2)
 library("plotly")
 library("parallel")
 ```
@@ -91,7 +90,9 @@ f.hat.sphi <- matrix(rep(0, length(x)*length(y)), nrow=length(x))
 Sig <- cov(dat)
 H.plug_in <- diag(diag(sqrt(Sig))) * n^(-1/6) * (4 / 6)^(1/6)
 H.scott <- diag(diag(sqrt(Sig))) * n^(-1/6)
-H.g_scott <- Sig^(1/2) * n^(-1/6)
+
+svd_dat <- svd(Sig)
+H.g_scott <- svd_dat$u %*% diag(sqrt(svd_dat$d)) %*% t(svd_dat$v) * n^(-1/6)
 
 estimate <- function(H){
   # single core code
@@ -102,33 +103,6 @@ estimate <- function(H){
       f.hat.sphi[ii, jj] <- kde.sphi(u, H)
     }
   }
-
-  # # more cores code
-  # ex.multiple <- function(ii){
-  #   # ii: different index of x
-  #   # jj: index of y
-  #   unlist(lapply(1:length(y), function(jj, xx) {
-  #                                       u <- c(xx, y[jj])
-  #                                       return(kde.multiple(u, H))
-  #                             }, x[ii]))
-  # }
-  # ex.sphi <- function(ii){
-  #   # ii: different index of x
-  #   # jj: index of y
-  #   unlist(lapply(1:length(y), function(jj, xx) {
-  #                                       u <- c(xx, y[jj])
-  #                                       return(kde.multiple(u, H))
-  #                             }, x[ii]))
-  # }
-  # cl <- makeCluster(getOption("cl.cores", as.integer(detectCores()/2)))
-  # clusterExport(cl, c('dat' ,'x' , 'y', 'H.plug_in', 'H.scott', 'H.g_scott', 'n', 'kde.sphi', 'kde.multiple', 'sphi.kernel', 'sphi.kernel'))                # include all the function needed
-  # f.hat.multiple <- parSapply(cl, 1:length(x), ex.multiple)
-  # stopCluster(cl)
-  # 
-  # cl <- makeCluster(getOption("cl.cores", as.integer(detectCores()/2)))
-  # clusterExport(cl, c('dat' ,'x' , 'y', 'H.plug_in', 'H.scott', 'H.g_scott', 'n', 'kde.sphi', 'kde.multiple', 'sphi.kernel', 'sphi.kernel'))                # include all the function needed
-  # f.hat.sphi <- parSapply(cl, 1:length(x), ex.sphi)
-  # stopCluster(cl)
   
   plot_ly() %>% add_surface(z = ~f.hat.multiple)
   
@@ -141,14 +115,8 @@ estimate(H.g_scott)
 
 ```
 
-## Exercise 2 (HW 10.2)
-Suppose $X_1,\ldots.X_n$ i.i.d obeys the unary density $f(x)$. The random variable $U$ obeys a uniform distribution over $\{1,2,...,n\}$, let $Y=X_U+hZ$, where $Z$ has the density $p(x)$ And independent of $X_1,\ldots.X_n$ and $U$.
 
-(1) Prove that under the given conditions of $X_1, \dots,X_n$, $Y$ has a density $f^(\cdot)$, which is a kernel estimate based on the samples $X_1, \dots,X_n$ and the kernel function $p(\cdot)$ and the bandwidth $h$.
-
-(2) Find the variance of $f^(\cdot)$ given the conditions of $X_1, \dots,X_n$. How does it compare with the variance of the samples based on $X_1, \dots,X_n$?
-
-## Exercise 3 (HW 10.3)
+## Exercise 2 (HW 10.3)
 For the **wines** data, remove the categorical variable vintage and normalize the variables, then perform PCA. 
 Using the clustering method based on density estimation (refer to Appendix cluster.R),
 
@@ -165,3 +133,202 @@ Compare the results of $2$ principal components and $3$ principal components.
 (4) Compare clustering results with real categories.
 
 (5) Compare the results of $k=3, 4$ under the kmeans clustering algorithm.
+
+## Answer 2
+
+(1)
+
+```{r, include=FALSE}
+library("numDeriv")
+library("viridis")
+# Planets
+th <- 2 * pi / 3
+r <- 2
+xi_1 <- r * c(cos(th + 0.5), sin(th + 0.5))
+xi_2 <- r * c(cos(2 * th + 0.5), sin(2 * th + 0.5))
+xi_3 <- r * c(cos(3 * th + 0.5), sin(3 * th + 0.5))
+
+# Gravity force
+gravity <- function(x) {
+
+  (mvtnorm::dmvnorm(x = x, mean = xi_1, sigma = diag(rep(0.5, 2))) +
+     mvtnorm::dmvnorm(x = x, mean = xi_2, sigma = diag(rep(0.5, 2))) +
+     mvtnorm::dmvnorm(x = x, mean = xi_3, sigma = diag(rep(0.5, 2)))) / 3
+
+}
+
+# Compute numerically the gradient of an arbitrary function
+attraction <- function(x) numDeriv::grad(func = gravity, x = x)
+
+# Evaluate the vector field
+x <- seq(-4, 4, l = 20)
+xy <- expand.grid(x = x, y = x)
+dir <- apply(xy, 1, attraction)
+
+# Scale arrows to unit length for better visualization
+len <- sqrt(colSums(dir^2))
+dir <- 0.25 * scale(dir, center = FALSE, scale = len)
+
+# Colors of the arrows according to their original magnitude
+cuts <- cut(x = len, breaks = quantile(len, probs = seq(0, 1, length.out = 21)))
+cols <- viridis::viridis(20)[cuts]
+
+# Vector field plot
+plot(0, 0, type = "n", xlim = c(-4, 4), ylim = c(-4, 4), xlab = "x", ylab = "y")
+arrows(x0 = xy$x, y0 = xy$y, x1 = xy$x + dir[1, ], y1 = xy$y + dir[2, ],
+       angle = 10, length = 0.1, col = cols, lwd = 2)
+points(rbind(xi_1, xi_2, xi_3), pch = 19, cex = 1.5)
+
+
+
+################################################################
+# A simulated example for which the population clusters are known
+# Extracted from ?ks::dmvnorm.mixt
+mus <- rbind(c(-1, 0), c(1, 2 / sqrt(3)), c(1, -2 / sqrt(3)))
+Sigmas <- 1/25 * rbind(ks::invvech(c(9, 63/10, 49/4)),
+                       ks::invvech(c(9, 0, 49/4)),
+                       ks::invvech(c(9, 0, 49/4)))
+props <- c(3, 3, 1) / 7
+
+# Sample the mixture
+set.seed(123456)
+x <- ks::rmvnorm.mixt(n = 1000, mus = mus, Sigmas = Sigmas, props = props)
+
+# Kernel mean shift clustering. If H is not specified, then
+# H = ks::Hpi(x, deriv.order = 1) is employed. Its computation may take some
+# time, so it is advisable to compute it separately for later reusage
+H <- ks::Hpi(x = x, deriv.order = 1)
+kms <- ks::kms(x = x, H = H)
+
+# Plot clusters
+plot(kms, col = viridis::viridis(kms$nclust), pch = 19, xlab = "x", ylab = "y")
+
+
+# Summary
+summary(kms)
+## Number of clusters = 3 
+## Cluster label table = 521 416 63 
+## Cluster modes =
+##           V1          V2
+## 1  1.0486466  0.96316436
+## 2 -1.0049258  0.08419048
+## 3  0.9888924 -1.43852908
+
+# Objects in the kms object
+kms$nclust # Number of clusters found
+## [1] 3
+kms$nclust.table # Sizes of clusters
+## 
+##   1   2   3 
+## 521 416  63
+kms$mode # Estimated modes
+##            [,1]        [,2]
+## [1,]  1.0486466  0.96316436
+## [2,] -1.0049258  0.08419048
+## [3,]  0.9888924 -1.43852908
+
+# With keep.path = TRUE the ascending paths are returned
+kms <- ks::kms(x = x, H = H, keep.path = TRUE)
+cols <- viridis::viridis(kms$nclust, alpha = 0.5)[kms$label]
+plot(x, col = cols, pch = 19, xlab = "x", ylab = "y")
+for (i in 1:nrow(x)) lines(kms$path[[i]], col = cols[i])
+points(kms$mode, pch = 8, cex = 2, lwd = 2)
+```
+
+
+```{r}
+dat <- read.table('wines.txt')
+truth <- dat[-1, 14]
+dat <- data.matrix(dat[-1, ][, -14])
+dat <- scale(dat, center = TRUE, scale = TRUE)
+
+fit.pca <- prcomp(dat)
+pcs <- fit.pca$x
+
+H <- ks::Hpi(x = pcs[, 1:3], deriv.order = 1)
+kms_wines <- ks::kms(x = pcs[, 1:3], H = H)
+cat('number of clusters: ', kms_wines$nclust, '\n')
+
+kms_wines <- ks::kms(x = pcs[, 1:3], H = H, min.clust.size =  nrow(dat)*0.05)
+cat('number of clusters: ', kms_wines$nclust, '\n')
+
+kms_wines <- ks::kms(x = pcs[, 1:3], H = H, min.clust.size =  nrow(dat)*0.1)
+cat('number of clusters: ', kms_wines$nclust, '\n')
+
+kms_wines <- ks::kms(x = pcs[, 1:3], H = H, min.clust.size =  nrow(dat)*0.02)
+cat('number of clusters: ', kms_wines$nclust, '\n')
+```
+
+If we use 3 PCs to cluster, we can get $6$ classes by default parameter. 
+
+If the *min.clust.size* variable is set to a minimum class containing at least $5\% (9)$ of the data the number of clusters is $3$. 
+If the *min.clust.size* variable is set to a minimum class containing at least $10\% (18)$ of the data the number of clusters in $3$. 
+If the *min.clust.size* variable is set to a minimum class containing at least $2\% (4)$ of the data the number of clusters in $4$. 
+
+So the result sensitive to the value of *min.clust.size*. We need to choose a appropriate value to cluster, otherwise we may get a wrong answer. It's conserative to get a small value.
+
+(2)
+We use at least $5\%$ data in each cluster and $6$ PCs.
+```{r}
+H <- ks::Hpi(x = pcs[, 1:6]) # Error: cannot allocate vector of size 4.5 Gb
+kms_wines <- ks::kms(x = pcs[, 1:6], H = H, min.clust.size = nrow(dat)*0.05)
+cat('number of clusters: ', kms_wines$nclust, '\n')
+```
+
+We get $12$ clusters.
+
+```{r, echo=FALSE}
+library(ggplot2)
+library(GGally)
+ggpairs(data.frame(pcs), columns=1:6, aes(color=truth)) +   ggtitle("Anderson's Iris Data -- 3 species")
+```
+
+The plot shows that PC5 and PC6 has the same pattern with any other PCs, thus these PCs may does not help to cluster. 
+
+(3)
+```{r}
+H <- ks::Hpi(x = pcs[, 1:2]) # Error: cannot allocate vector of size 4.5 Gb
+kms_wines <- ks::kms(x = pcs[, 1:2], H = H)
+cat('number of clusters: ', kms_wines$nclust, '\n')
+```
+There are $5$ clusters when using $3$ PCs.
+
+(4)
+```{r}
+H <- ks::Hpi(x = pcs[, 1:3], deriv.order = 1)
+kms_wines <- ks::kms(x = pcs[, 1:3], H = H, min.clust.size=9)
+library(mclust)
+err <- classError(kms_wines$label, truth)$errorRate
+cat('Clustering error rate: ', err, '\n')
+
+kms_wines <- ks::kms(x = pcs[, 1:3], H = H)
+library(mclust)
+err <- classError(kms_wines$label, truth)$errorRate
+cat('Clustering error rate: ', err, '\n')
+
+H <- ks::Hpi(x = pcs[, c(1,2,3,4,6)])
+kms_wines <- ks::kms(x = pcs[, c(1,2,3,4,6)], H = H, min.clust.size=9)
+library(mclust)
+err <- classError(kms_wines$label, truth)$errorRate
+cat('Clustering error rate: ', err, '\n')
+```
+
+We use $3$ PCs and set each clusters contains $5\%$ of data, the result shows the error rate of clustering is $7.3\%$. And the error rate increases if we don't restrict the *min.clust.size*. 
+
+In addition, if we use $5$ PCs, the error rate becomes unacceptable. 
+
+(5)
+```{r}
+set.seed(1111)
+fit.kmeans3 <- kmeans(dat, centers = 3)
+fit.kmeans4 <- kmeans(dat, centers = 4)
+err3 <- classError(fit.kmeans3$cluster, truth)$errorRate
+err4 <- classError(fit.kmeans4$cluster, truth)$errorRate
+
+cat('Clustering error rate of kmeans with k=3: ', err3, '\n')
+cat('Clustering error rate of kmeans with k=4: ', err4, '\n')
+```
+
+The error rate of keams are $7.91\%$ and $22.0\%$ with $k=3,4$ respectively.
+
+From the reslut above, we know that the density estimation based method did better with appropriate parameters as shown in (4).
