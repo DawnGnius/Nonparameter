@@ -1,0 +1,107 @@
+---
+title: "Homeword 11"
+author: "Liu Huihang"
+date: "11/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 1
+
+For the data set *faithful* in R, test whether the *eruptions* and *waiting* are independent of each other. 
+
+## Answer 1
+
+Assume that *eruptions*$=X\sim f_1(x)$ and  *waiting*$=Y\sim f_2(y)$.
+We are going to do the following test
+\begin{equation}
+  H_0: \; f(x,y) = f_1(x) f_2(y) \Leftrightarrow H_1: \; f(x,y) \neq f_1(x) f_2(y)
+\end{equation}
+and observe that
+\begin{equation}
+  \begin{split} 
+    I & =  
+    \int\left[f(x, y)-f_{1}(x) f_{2}(y)\right]^{2} d x d y \\
+    & = \int f(x, y) d F(x, y)+\int f_{1}(x) d F_{1}(x) \int f_{2}(y) d F_{2}(y) - 2 \int f_{1}(x) f_{2}(y) d F(x, y) \\
+    & = E f(X, Y)+E\left[f_{1}(X)\right] E\left[f_{2}(Y)\right]-2 E\left[f_{1}(X) f_{2}(Y)\right] 
+  \end{split}
+\end{equation}
+This lead to the following expression
+\begin{equation}
+    \hat{I} 
+    =\frac{1}{n} \sum_{i=1}^{n} \hat{f}_{-i}\left(X_{i}, Y_{i}\right)
+    +\frac{1}{n^{2}} \sum_{i=1}^{n} \sum_{j=1}^{n} \hat{f}_{1,-i}\left(X_{i}\right) \hat{f}_{2,-j}\left(Y_{j}\right) 
+    -\frac{2}{n} \sum_{i=1}^{n} \hat{f}_{1,-i}\left(X_{i}\right) \hat{f}_{2,-i}\left(Y_{i}\right) 
+\end{equation}
+where
+\begin{equation}
+  \begin{split}
+    \hat{f}_{-i}\left(X_{i}, Y_{i}\right) & = \frac{1}{n-1} \sum_{j \neq i} K_{h_{x}}\left(X_{j}-X_{i}\right) K_{h_{y}}\left(Y_{j}-Y_{i}\right) \\ 
+    \hat{f}_{1,-i}\left(X_{i}\right) & = \frac{1}{n-1} \sum_{j \neq i} K_{h_{x}}\left(X_{j}-X_{i}\right), \\ 
+    \hat{f}_{2,-i}\left(Y_{i}\right) & = \frac{1}{n-1} \sum_{j \neq i} K_{h_{y}}\left(Y_{j}-Y_{i}\right), \\ 
+    K_{h_{x}}\left(X_{j}-X_{i}\right) & = \frac{1}{h_{x}} K\left( \frac{X_{i}-X_{j}}{h_{x}} \right), \\ 
+    K_{h_{y}}\left(Y_{j}-Y_{i}\right) & = \frac{1}{h_{y}} K\left( \frac{Y_{i}-Y_{j}}{h_{y}} \right).
+  \end{split}
+\end{equation}
+
+Under some regularity conditions and $H_0$ we have
+\begin{equation}
+    T  =  \frac{n \left( h_{x} h_{y} \right)^{1/2} \hat{I}}{\hat{\sigma}} \leadsto N(0,1) 
+\end{equation}
+where
+\begin{equation*}
+    \hat{\sigma}^{2} = 2\left(n^{2} h_{x} h_{y}\right)^{-1} \sum_{i=1}^{n} \sum_{j \neq i}^{n} K^{2}\left(\frac{X_{i}-X_{j}}{h_{x}}\right) K^{2}\left(\frac{Y_{i}-Y_{j}}{h_{y}}\right) 
+\end{equation*}
+
+```{r}
+data('faithful')
+dat <- data.matrix(faithful)
+n <- dim(dat)[1]
+h.x <- h.y <- n^(-1/5)
+
+
+f.hat.remove_i <- function(i){
+  idx <- seq(1,n); idx <- idx[-i]
+  mean(unlist(lapply(X=idx, FUN=function(jj){dnorm((dat[jj,1]-dat[i,1])/h.x) * dnorm((dat[jj,2]-dat[i,2])/h.y) / h.x / h.y})))
+}
+
+f1.hat.remove_i <- function(i){
+  idx <- seq(1,n); idx <- idx[-i]
+  mean(unlist(lapply(X=idx, FUN=function(jj){dnorm((dat[jj,1]-dat[i,1])/h.x) / h.x })))
+}
+
+f2.hat.remove_i <- function(i){
+  idx <- seq(1,n); idx <- idx[-i]
+  mean(unlist(lapply(X=idx, FUN=function(jj){dnorm((dat[jj,2]-dat[i,2])/h.y) / h.y})))
+}
+
+f12.hat.remove_i <- function(i){
+  idx <- seq(1,n); idx <- idx[-i]
+  mean(unlist(lapply(X=idx, FUN=function(jj){dnorm((dat[jj,1]-dat[i,1])/h.x) / h.x }))) * mean(unlist(lapply(X=idx, FUN=function(jj){dnorm((dat[jj,2]-dat[i,2])/h.y) / h.y})))
+}
+
+tmp1 <- mean(unlist(lapply(X=1:n, FUN=f.hat.remove_i)))
+tmp2 <- mean(unlist(lapply(X=1:n, FUN=f1.hat.remove_i))) * mean(unlist(lapply(X=1:n, FUN=f1.hat.remove_i)))
+tmp3 <- mean(unlist(lapply(X=1:n, FUN=f12.hat.remove_i))) * 2
+
+I <- tmp1 + tmp2 - tmp3
+cat('We get I.hat = ', I,'\n')
+
+tmp <- 0
+for (ii in 1:n) {
+  for (jj in (1:n)[-ii]) {
+    tmp <- tmp + (dnorm((dat[ii,1]-dat[jj,1])/h.x))^2 * (dnorm((dat[ii,2]-dat[jj,2])/h.y))^2 
+  }
+}
+sigma.sq <- 2 * tmp / n^2 / h.x / h.y
+
+T <- n * sqrt(h.x*h.y) * I / sqrt(sigma.sq)
+cat('Statistic T = ', T,'\n')
+```
+
+We got a large statistic $T$ which means we should reject the null hypothesis.
+
+In conclusion, we suppose that the *eruptions* and *waiting* are not independent of each other. 
