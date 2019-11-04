@@ -1,0 +1,36 @@
+\begin{problem}[HW 10.2]
+Suppose $X_1,\ldots.X_n$ i.i.d obey the unary density $f(x)$. The random variable $U$ obeys a uniform distribution over $\{1,2,...,n\}$, let $Y=X_U+hZ$, where $Z$ has the density $p(x)$ And independent of $X_1,\ldots.X_n$ and $U$.
+
+(1) Prove that under the given conditions of $X_1, \dots,X_n$, $Y$ has a density $\hat{f}(\cdot)$, which is a kernel estimate based on the samples $X_1, \dots,X_n$ and the kernel function $p(\cdot)$ and the bandwidth $h$.
+
+(2) Find the variance of $\hat{f}(\cdot)$ given the conditions of $X_1, \dots,X_n$. 
+How does it compare with the variance of the samples based on $X_1, \dots,X_n$?
+
+\end{problem}
+
+\begin{solution}
+    (1) Firstly, let's focuse on the density of Y $\hat{f}(\cdot)$.
+
+    \begin{equation*}
+        \begin{split}
+            P(Y < x) & = P(X_U + hZ < y) \\
+            & = E\left[ P(X_U + hZ < x | U = i) \right] \\
+            & = E \left[ P(Z < \frac{x-X_i}{h}) \right] \\
+            & = \frac{1}{n} \sum_{i=1}^n \int_0^{\frac{x-X_i}{h}} p(t) dt \\
+        \end{split}
+    \end{equation*}
+    This leads to 
+    \begin{equation*}
+        \hat{f}(\cdot) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} p\left( \frac{x-X_i}{h} \right) 
+    \end{equation*}
+
+    Actually, this is the KDE on the samples $X_1, \dots,X_n$ and the kernel function $p(\cdot)$ and the bandwidth $h$.
+    
+    (2) The variance of $\hat{f}(\cdot)$ is
+    \begin{equation*}
+        \begin{split}
+            Var(\hat{f}) & = \int x^2 \hat{f}(x) dx - \left( \int x\hat{f}(x) dx \right)^2 \\
+            & =\frac{1}{nh} f(x) \kappa_{02} + o(\frac{1}{nh}) \\
+        \end{split}
+    \end{equation*}
+\end{solution}
