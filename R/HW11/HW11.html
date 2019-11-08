@@ -430,12 +430,12 @@ f12.hat.remove_i &lt;- function(i){
 }
 
 tmp1 &lt;- mean(unlist(lapply(X=1:n, FUN=f.hat.remove_i)))
-tmp2 &lt;- mean(unlist(lapply(X=1:n, FUN=f1.hat.remove_i))) * mean(unlist(lapply(X=1:n, FUN=f1.hat.remove_i)))
+tmp2 &lt;- mean(unlist(lapply(X=1:n, FUN=f1.hat.remove_i))) * mean(unlist(lapply(X=1:n, FUN=f2.hat.remove_i)))
 tmp3 &lt;- mean(unlist(lapply(X=1:n, FUN=f12.hat.remove_i))) * 2
 
 I &lt;- tmp1 + tmp2 - tmp3
 cat(&#39;We get I.hat = &#39;, I,&#39;\n&#39;)</code></pre>
-<pre><code>## We get I.hat =  0.1214504</code></pre>
+<pre><code>## We get I.hat =  0.008631936</code></pre>
 <pre class="r"><code>tmp &lt;- 0
 for (ii in 1:n) {
   for (jj in (1:n)[-ii]) {
@@ -446,9 +446,55 @@ sigma.sq &lt;- 2 * tmp / n^2 / h.x / h.y
 
 T &lt;- n * sqrt(h.x*h.y) * I / sqrt(sigma.sq)
 cat(&#39;Statistic T = &#39;, T,&#39;\n&#39;)</code></pre>
-<pre><code>## Statistic T =  151.7072</code></pre>
+<pre><code>## Statistic T =  10.78241</code></pre>
 <p>We got a large statistic <span class="math inline">\(T\)</span> which means we should reject the null hypothesis.</p>
-<p>In conclusion, we suppose that the <em>eruptions</em> and <em>waiting</em> are not independent of each other.</p>
+<p>Let’s try some different bandwidth selection methods as described in Homework-10.</p>
+<pre class="r"><code># bandwith selection
+Sig &lt;- cov(dat)
+H.plug_in &lt;- diag(diag(sqrt(Sig))) * n^(-1/6) * (4 / 6)^(1/6)
+H.scott &lt;- diag(diag(sqrt(Sig))) * n^(-1/6)</code></pre>
+<p>Firstly, plug-in bandwidth.</p>
+<pre class="r"><code>h.x &lt;- H.plug_in[1,1]; h.y &lt;- H.plug_in[2,2]
+tmp1 &lt;- mean(unlist(lapply(X=1:n, FUN=f.hat.remove_i)))
+tmp2 &lt;- mean(unlist(lapply(X=1:n, FUN=f1.hat.remove_i))) * mean(unlist(lapply(X=1:n, FUN=f2.hat.remove_i)))
+tmp3 &lt;- mean(unlist(lapply(X=1:n, FUN=f12.hat.remove_i))) * 2
+
+I &lt;- tmp1 + tmp2 - tmp3
+cat(&#39;We get I.hat = &#39;, I,&#39;\n&#39;)</code></pre>
+<pre><code>## We get I.hat =  0.005581002</code></pre>
+<pre class="r"><code>tmp &lt;- 0
+for (ii in 1:n) {
+  for (jj in (1:n)[-ii]) {
+    tmp &lt;- tmp + (dnorm((dat[ii,1]-dat[jj,1])/h.x))^2 * (dnorm((dat[ii,2]-dat[jj,2])/h.y))^2 
+  }
+}
+sigma.sq &lt;- 2 * tmp / n^2 / h.x / h.y
+
+T &lt;- n * sqrt(h.x*h.y) * I / sqrt(sigma.sq)
+cat(&#39;Statistic T = &#39;, T,&#39;\n&#39;)</code></pre>
+<pre><code>## Statistic T =  42.86234</code></pre>
+<p>Then, Scott bandwidth.</p>
+<pre class="r"><code>h.x &lt;- H.scott[1,1]; h.y &lt;- H.scott[2,2]
+tmp1 &lt;- mean(unlist(lapply(X=1:n, FUN=f.hat.remove_i)))
+tmp2 &lt;- mean(unlist(lapply(X=1:n, FUN=f1.hat.remove_i))) * mean(unlist(lapply(X=1:n, FUN=f2.hat.remove_i)))
+tmp3 &lt;- mean(unlist(lapply(X=1:n, FUN=f12.hat.remove_i))) * 2
+
+I &lt;- tmp1 + tmp2 - tmp3
+cat(&#39;We get I.hat = &#39;, I,&#39;\n&#39;)</code></pre>
+<pre><code>## We get I.hat =  0.005256267</code></pre>
+<pre class="r"><code>tmp &lt;- 0
+for (ii in 1:n) {
+  for (jj in (1:n)[-ii]) {
+    tmp &lt;- tmp + (dnorm((dat[ii,1]-dat[jj,1])/h.x))^2 * (dnorm((dat[ii,2]-dat[jj,2])/h.y))^2 
+  }
+}
+sigma.sq &lt;- 2 * tmp / n^2 / h.x / h.y
+
+T &lt;- n * sqrt(h.x*h.y) * I / sqrt(sigma.sq)
+cat(&#39;Statistic T = &#39;, T,&#39;\n&#39;)</code></pre>
+<pre><code>## Statistic T =  43.88975</code></pre>
+<p>In conclusion, we suppose that the <em>eruptions</em> and <em>waiting</em> are <font face="times" size="5">not independent</font> of each other.</p>
+<p>And also we should notice that different bandwidth selections may greatly influence the statistics <span class="math inline">\(T\)</span>. I’d better choice the optimal one.</p>
 </div>
 
 
