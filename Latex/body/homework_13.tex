@@ -1,0 +1,74 @@
+\begin{problem}[HW 13.1]
+Assume that bandwidth selection method in N-W estimator $\hat{m}$ without leave-one-out method is given by
+\begin{equation*}
+    h_0=\arg\min\frac1n\sum_{i=1}^n(Y_i-\hat{m}(X_i))^2.
+\end{equation*}
+Prove $h_0 = 0$.
+\end{problem}
+
+\begin{solution}
+    N-W estimator at $x$ is given by
+    \begin{equation*}
+        \hat{m}(x)=\frac{n^{-1} \sum_{i=1}^{n} \mathcal{K}_{h}\left(x-X_{i}\right) Y_{i}}{n^{-1} \sum_{i=1}^{n} \mathcal{K}_{h}\left(x-X_{i}\right)}.
+    \end{equation*}
+    We can rewrite the N-W estimator
+    \begin{equation*}
+        \begin{split} 
+            \hat{m}(x) 
+            &=\frac{1}{n} \sum_{i=1}^{n}\left(\frac{\mathcal{K}_{h}\left(x-X_{i}\right)}{n^{-1} \sum_{i=1}^{n} \mathcal{K}_{h}\left(x-X_{i}\right)}\right) Y_{i} \\ 
+            &=\frac{1}{n} \sum_{i=1}^{n} W_{h i}(x) Y_{i} .
+        \end{split}
+    \end{equation*}
+
+    \begin{equation*}
+        \begin{split}
+            h_0
+            & = \arg\min\frac1n \sum_{i=1}^n \left((Y_i-\hat{m}(X_i)\right)^2 \\
+            & = \arg\min\frac1n \sum_{i=1}^n \left(Y_i- \frac{1}{n} \sum_{j=1}^{n} W_{h j}(x_i) Y_{j} \right)^2 \\ \\
+        \end{split}
+    \end{equation*}
+
+    Notice that $\left(Y_i- \frac{1}{n} \sum_{j=1}^{n} W_{h j}(x_i) Y_{j} \right)^2$ reaches its mininal $0$, if $Y_i = \frac{1}{n} \sum_{j=1}^{n} W_{h j}(x_i) Y_{j}$. 
+    And the equation holds, as long as $h=0$ for every $i=1,2,\dots,n$. 
+
+    Thus $h_0 = 0$. 
+\end{solution}
+
+
+\begin{problem}[HW 13.2]
+    Prove that N-W estimator $\hat{m}(x)$ with bandwidth selected by leave-one-out method satisfies
+    \begin{equation*}
+        CV(h)=\frac1n\sum_{i=1}^n(Y_i-\hat{m}_{-i}(X_i))^2=\frac1n\sum_{i=1}^n\Big(\frac{Y_i-\hat{m}(X_i)}{1-W_i(X_i)}\Big)^2,
+    \end{equation*}
+    where $W_i(x)= \mathcal{K}_h(X_i-x)/\sum_{j=1}^n \mathcal{K}_h(X_j-x)$.
+\end{problem}
+
+
+\begin{solution}
+    We have N-W estimator $\hat{m}_{-i}\left(X_{i}\right)$ at $X_i$ with bandwidth selected by leave-one-out method as
+    \begin{equation*}
+        \begin{split}
+            \hat{m}_{-i}\left(X_{i}\right)
+            & = \frac{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)Y_j}{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)} \\
+            & = \frac{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)Y_j}{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right) + \mathcal{K}(0) - \mathcal{K}(0)} \\
+            & = \frac{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)Y_j}{\sum_{j=1}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)- \mathcal{K}(0)} \\
+            & = \frac{\sum_{j=1, j \neq i}^{n} W_i(X_j)Y_j}{1-W_i(X_i)}. \\
+        \end{split}
+    \end{equation*}
+    The last equation is proved by simultaneously dividing numerator and denominator by $\sum_{j=1}^n \mathcal{K}_h(X_j-x)$.
+
+    Then we can rewrite the $CV(h)$ by replacing $\hat{m}_{-i}\left(X_{i}\right)$ with $\frac{\sum_{j=1, j \neq i}^{n} W_i(X_j)Y_j}{1-W_i(X_i)}$ as following.
+    \begin{equation*}
+        \begin{split}
+            CV(h) 
+            & = \frac1n\sum_{i=1}^n (Y_i-\hat{m}_{-i}(X_i))^2  \\
+            % & = \frac1n\sum_{i=1}^n \left( Y_i -  \frac{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)Y_j}{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)} \right)^2 \\
+            % & = \frac1n\sum_{i=1}^n \left( \frac{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right) Y_i}{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)} -  \frac{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)Y_j}{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)} \right)^2 \\
+            % & = \frac1n\sum_{i=1}^n \left(  \frac{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right) (Y_i-Y_j)}{\sum_{j=1, j \neq i}^{n} \mathcal{K}_{h}\left(X_{i}-X_{j}\right)}  \right)^2 
+            & = \frac1n\sum_{i=1}^n \left( Y_i - \frac{\sum_{j\neq i}W_i(X_j)Y_j}{1-W_i(X_i)}   \right)^2 \\
+            & = \frac1n\sum_{i=1}^n \left( \frac{(1-W_i(X_i))Y_i}{1-W_i(X_i)} - \frac{\sum_{j\neq i}W_i(X_j)Y_j}{1-W_i(X_i)}   \right)^2 \\
+            & = \frac1n\sum_{i=1}^n \left( \frac{Y_i - W_i(X_i)Y_i - \sum_{j\neq i}W_i(X_j)Y_j}{1-W_i(X_i)}\right)^2 \\
+            & = \frac1n\sum_{i=1}^n \left( \frac{Y_i - \hat{m}(X_i}{1-W_i(X_i)}\right)^2. \\
+        \end{split}
+    \end{equation*}
+\end{solution}

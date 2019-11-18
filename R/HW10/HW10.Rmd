@@ -280,7 +280,7 @@ We get $12$ clusters.
 ```{r, echo=FALSE}
 library(ggplot2)
 library(GGally)
-ggpairs(data.frame(pcs), columns=1:6, aes(color=truth)) +   ggtitle("Anderson's Iris Data -- 3 species")
+ggpairs(data.frame(pcs), columns=1:6, aes(color=truth)) + ggtitle("Anderson's Iris Data -- 3 species")
 ```
 
 The plot shows that PC5 and PC6 has the same pattern with any other PCs, thus these PCs may does not help to cluster. 
