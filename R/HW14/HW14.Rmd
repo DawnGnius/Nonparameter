@@ -1,0 +1,110 @@
+---
+title: "Homeword 14"
+author: "Liu Huihang"
+date: "11/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 14.2
+
+This homework imitats Li Weiyu's homework last year.
+
+
+Let's consider the following generalized linear regression model
+    \begin{equation*}
+        Y|X=x\sim Exp(\lambda(x)), \lambda(x)=e^{\beta_0+\beta_1x}.
+    \end{equation*}
+    Using local likelihood method, write an estimation function whose variables include the sample $X, Y$ and the point $x$ where the estimate is needed, the bandwidth $h$ and the kernel function $K$. 
+    
+Simulation: Generate a set of data, uses your function to estimate and uses cross-validation for optimal bandwidth selection. 
+
+## Answer
+\begin{equation}
+  E[Y|X=x] = \frac{1}{\lambda(x)} = e^{-\beta_0-\beta_1x}
+\end{equation}
+Then the link function is $g(x) = − log(x)$.
+The log-likelihood function is
+\begin{equation}
+  l(\beta)=\sum_{i=1}^{n} \log \left(\lambda\left(X_{i}\right)\right)-\lambda\left(X_{i}\right) Y_{i}=\sum_{i=1}^{n} l\left(Y_{i}, \lambda\left(X_{i}\right)\right)
+\end{equation}
+
+The local log-likelihood of $\beta$ around $x$ is then
+\begin{equation}
+  \begin{split} 
+    l_{x, h}(\beta) 
+    &=\sum_{i=1}^{n}\left[\log \left(\lambda\left(X_{i}-x\right)\right)-\lambda\left(X_{i}-x\right) Y_{i}\right] K_{h}\left(x-X_{i}\right) \\ 
+    &=\sum_{i=1}^{n}\left[\beta_{0}+\beta_{1}\left(X_{i}-x\right)-e^{\beta_{0}+\beta_{1}\left(X_{i}-x\right)} Y_{i}\right] K_{h}\left(x-X_{i}\right) 
+  \end{split}
+\end{equation}
+
+Maximizing $l_{x,h}(\beta)$ yields $\hat{\beta} = (\hat{\beta}_0, \hat{\beta}_1)^T$, thus we have $\hat{m}(x; h, p) = g^{−1}(\hat{\beta}_0) = e^{−\hat{\beta}_0}$. 
+
+For optimal bandwidth, use cross-validation, that is, maximize
+\begin{equation}
+    L C V(h)=\sum_{i=1}^{n} l\left(Y_{i}, \hat{\lambda}_{-i}\left(X_{i}\right)\right)
+\end{equation}
+
+
+```{r}
+set.seed(1345)
+n <- 400
+x <- rnorm(n=n, mean=0, sd=1)
+beta <- c(-10, 1)
+lambda <- function(x) exp(beta[1]+beta[2]*x)
+y <- unlist(lapply(1:n, function(ii) rexp(n=1, rate=exp(beta[1]+beta[2]*x[ii]))))
+plot(x, y)
+```
+
+```{r, warning = FALSE}
+# likelihood function
+lik <- function(y,beta) beta-exp(beta)*y 
+
+# Set bandwidth and evaluation grid
+h <- 0.5
+t <- seq(-3, 3, l = 501)
+
+# Optimize the weighted log-likelihood explicitly
+fitNlm <- sapply(t, function(t) {
+                  K <- dnorm(x = t, mean = x, sd = h)
+                  nlm(f = function(beta1) {
+                          sum(K * (y * exp(beta1[1] + beta1[2] * (x - t)) - ( beta1[1] + beta1[2] * (x - t))))
+                          }, p <- c(0, 0)
+                      )$estimate[1]
+                })
+
+# Compare fits
+plot(t, 1/lambda(t),  type = "l", lwd = 2) # solid black line
+lines(t, exp(-fitNlm), col = 2, lty = 2)   # red dash line, inverse of link function g
+points(x, y)
+```
+
+```{r, warning = FALSE}
+# Exact LCV 
+h <- c(seq(0.1,1, by = .05), seq(1.5, 10, by=0.5))
+LCV <- sapply(h, function(h) {
+              sum(sapply(1:n, function(i) {
+                    K <- dnorm(x = x[i], mean = x[-i], sd = h)
+                    lik(y[i],nlm(f = function(beta) {
+                                        sum(K * (y[-i] * exp(beta[1] + beta[2] * (x[-i] - x[i])) - ( beta[1] + beta[2] * (x[-i] - x[i]))))
+                                        }, p = c(0, 0)
+                                )$estimate[1])
+                  }))
+            })
+plot(h, LCV, type = "o")
+abline(v = h[which.max(LCV)], col = 2)
+```
+
+CV plot tells us that when $h$ is between $0.1$ and $1$  the fits are bad, and then $h$ increses but LCV just change a little.
+
+The following result comes from $locfit$ package. It gives a confidence region of the estimation.
+```{r}
+# using locfit package to do local likelihood method
+library(locfit)
+dat <- data.frame(x,y)
+fit <- locfit(y~x, data=dat, family="gamma", deg=2, alpha=0.6)
+plot(fit, band="g", get.data=T)
+```

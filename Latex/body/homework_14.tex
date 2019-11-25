@@ -1,0 +1,90 @@
+\begin{problem}[HW 14.1]
+    Let $\{ X_i, Y_i \}$ be bivariate random sample, and $Y_i$ are generated from 
+    \begin{equation*}
+        Y_i=m(X_i)+u_i
+    \end{equation*}
+    where $m(\cdot)$ is a unknown univariate smooth function, $\mu_i$ satisfy $Eu_i|X_i=0, Var(u_i|X_i)=\sigma^2(X_i), a.s.$.
+
+    (1) Get the local linear estimation of $m(x)$ and calculate the main terms of asymptotic bias and variance.
+
+    (2) Get $\hat{m}^{(1)}_{ll}(x)$, the local linear estimation of the first derivative of $m(x)$, and prove that $\hat{m}^{(1)}_{ll}(x)$ and $\hat{m}_{ll}(x)$ can be rewritten as 
+    \begin{equation*}
+        \hat{m}^{(1)}_{ll}(x)=\frac{\sum_{i=1}^n(Y_i-\bar{Y}_k)(X_i-\bar{X}_k)K_{i,x}}{\sum_{i=1}^n(X_i-\bar{X}_k)^2K_{i,x}}
+    \end{equation*}
+    and
+    \begin{equation*}
+        \hat{m}_{ll}(x)=\bar{Y}_k-(\bar{X}_k-x)\hat{m}^{(1)}_{ll}(x)
+    \end{equation*}
+    where $\bar{Y}_k=\sum_{i=1}^nY_iK_{i,x}/\sum_{i=1}^nK_{i,x}$, $\bar{X}_k=\sum_{i=1}^nX_iK_{i,x}/\sum_{i=1}^nK_{i,x}$ and $K_{i,x}=K_h(x-X_i)$.
+\end{problem}
+
+\begin{solution}
+    (1) Linear smoother is given by 
+    \begin{equation*}
+        \hat{m}(x) = (X_x^T W_x X_x)^{-1} X_x^T W_x Y
+    \end{equation*}
+    where 
+    \begin{equation*}
+        X_x 
+        = 
+        \begin{pmatrix}
+            1      & 1       & \cdots & 1       \\
+            X_1 -x & X_2 - x & \cdots & X_n - x \\
+        \end{pmatrix}^T
+    \end{equation*}
+    and $W_x$ be the $n\times n$ diagonal matrix whose $(i,i)$ component is $K\left( \frac{X_i - x}{h}\right)$.
+
+    % By the second order Taylor expansion, 
+    % \begin{equation*}
+    %     m(X_i) = (1, X_i - x) m(x) + \frac{1}{2} (X_i -x)^2 m''(x) + R(x, X_i)
+    % \end{equation*}
+    % % where $R(x, X_i)$ is the remainder. 
+    Because $\hat{\beta}(x) = m_{ll}^ll$ and we can rewrite it from matrix form to general form. 
+    \begin{equation}
+       \begin{aligned} 
+            \hat{m}_{u}(x) 
+            & =\frac{\left(\sum_{i} K_{i, x}\left(X_{i}-x\right)^{2},-\sum_{i} K_{i, x}\left(X_{i}-x\right)\right)}{\sum_{i} K_{i, x} \sum_{i} K_{i, x}\left(X_{i}-x\right)^{2}-\left[\sum_{i} K_{i, x}\left(X_{i}-x\right)\right]^{2}}
+                \left(
+                    \begin{array}{c}
+                        {\sum_{i} K_{i, x} Y_{i}} \\ 
+                        {\sum_{i} K_{i, x}\left(X_{i}-x\right) Y_{i}}
+                    \end{array}
+                \right) \\ 
+            &=\frac{\sum_{i} K_{i, x}\left(X_{i}-x\right)^{2} \sum_{i} K_{i, x} Y_{i}-\sum_{i} K_{i, x}\left(X_{i}-x\right) \sum_{i} K_{i, x}\left(X_{i}-x\right) Y_{i}}{\sum_{i} K_{i, x} \sum_{i} K_{i, x}\left(X_{i}-x\right)^{2}-\left[\sum_{i} K_{i, x}\left(X_{i}-x\right)\right]^{2}} 
+        \end{aligned}
+    \end{equation}
+
+    By theorem in the slide, its asymptotic bias and variance are
+    \begin{equation}
+        \begin{array}{l}
+            {\operatorname{bias}\left(\hat{m}_{l l}(x)\right)=\frac{\kappa_{21}}{2} h^{2} m^{\prime \prime}(x)} \\ {\operatorname{Var}\left(\hat{m}_{l l}(x)\right)=\frac{\kappa_{02} \sigma^{2}(x)}{n h f(x)}}
+        \end{array}
+    \end{equation}
+    where $f(\cdot)$ is the density of $X$.
+
+    (2) From the above, we have 
+    \begin{equation}
+        \begin{aligned} 
+            \hat{m}_{ll}^{(1)}(x) 
+            &=\frac{\left(-\sum_{i} K_{i, x}\left(X_{i}-x\right), \sum_{i} K_{i, x}\right)}{\sum_{i} K_{i, x} \sum_{i} K_{i, x}\left(X_{i}-x\right)^{2}-\left[\sum_{i} K_{i, x}\left(X_{i}-x\right)\right]^{2}}\left(\sum_{i} K_{i, x}\left(X_{i}-x\right) Y_{i}\right) \\ 
+            &=\frac{-\sum_{i} K_{i, x}\left(X_{i}-x\right) \bar{Y}_{k}+\sum_{i} K_{i, x}\left(X_{i}-x\right) Y_{i}}{\sum_{i} K_{i, x}\left(X_{i}-x\right)^{2}-\left(\bar{X}_{k}-x\right) \sum_{i} K_{i, x}\left(X_{i}-x\right)} \\ 
+            &=\frac{\sum_{i} K_{i, x}\left(X_{i}-x\right)\left(Y_{i}-\bar{Y}_{k}\right)}{\sum_{i} K_{i, x}\left(X_{i}-x\right)\left(X_{i}-\bar{X}_{k}\right)} 
+        \end{aligned}
+    \end{equation}
+    
+    We can get
+    \begin{equation}
+        \hat{m}_{ll}(x)=\bar{Y}_{k}-\left(\bar{X}_{k}-x\right) \hat{m}_{l l}^{(1)}(x)
+    \end{equation}
+\end{solution}
+
+
+\begin{problem}[HW 14.2]
+    Let's consider the following generalized linear regression model
+    \begin{equation*}
+        Y|X=x\sim Exp(\lambda(x)), \lambda(x)=e^{\beta_0+\beta_1x}.
+    \end{equation*}
+    Using local likelihood method, write an estimation function whose variables include the sample $X, Y$ and the point $x$ where the estimate is needed, the bandwidth $h$ and the kernel function $K$. 
+    
+    Simulation: Generate a set of data, uses your function to estimate and uses cross-validation for optimal bandwidth selection. 
+\end{problem}
