@@ -1,0 +1,33 @@
+\begin{problem}[15.1]
+    Consider the following regression model
+    \begin{equation}
+        Y=f(X)+\epsilon,  f(X)=\frac{sin(12(X+0.2))}{X+0.2}
+    \end{equation}
+    Let $X\sim U(0,1), \epsilon\sim N(0,1)$. Randomly generate $N=100$ samples $(x_i,y_i)$, 
+
+    (1) Use smooth spline to fit the data set, and use CV to select the best turing parameters. 
+
+    (2) Draw the fitted curve and real curve under different degrees of freedom $df (5,9,15)$, with point-by-point confidence band.
+\end{problem}
+
+\begin{problem}[15.1]
+    Solve the following optimization problem
+    \begin{equation}
+        \min_f RSS(f,\lambda)=\sum_{i=1}^nw_i(y_i-f(x_i))^2+\lambda\int \{f''(t)\}^2dt,
+    \end{equation}
+    where $w_i\ge 0$ are weighted value to observations. 
+    Use this conclusion to investigate the solution of the optimization problem of smooth splines when there are knots in the observation points (that is, there are duplicates in the data).
+\end{problem}
+
+\begin{problem}[16.1]
+    Consider the following regression model
+    \begin{equation*}
+        y_i=f(x_i)+e_i,i=1,\ldots,n.
+    \end{equation*}
+    Let $N_j(x), j=1,\ldots,n$ be the basis of order $3$ nature spline, $f(x)=\sum_{j=1}^nN_j(x)\beta_j$ and $\Omega=(\Omega_{jk}), \Omega_{jk}=\int N''_jN''_k(t)dt$.
+    (1) Let $S_\lambda=N(N^TN+\lambda\Omega)^{-1}N^T$, prove
+    \begin{equation*}
+        CV(\lambda)=\frac1n\sum_{i=1}^n\Big(y_i-\hat{f}^{(-i)}(x_i)\Big)^2=\frac1n\sum_{i=1}^n\Big[\frac{y_i-\hat{f}(x_i)}{1-S_\lambda(i,i)}\Big]^2.
+    \end{equation*}
+    where $\hat{f}^{(-i)}(x_i)$ represents the estimation of $f$ at $x_i$ with removing $i$-th sample.
+\end{problem}
