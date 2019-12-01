@@ -1,11 +1,99 @@
 \section{Introduction}
+\label{sec:intro}
 
-\subsection{Motivation}
+\subsection{Motivation and Model}
 
 Modern data acquisition routinely produces massive amounts of high dimensional and highly complex datasets, including interactive logs from search engines, traffic records from network routing, chip data from high throughput genomic experiments, and image data from functional Magnetic Resonance Imaging (fMRI). 
 Driven by the complexity of these new types of data, highly adaptive and reliable data analysis procedures are crucially needed. 
 
 Older high dimensional theories and learning algorithms rely heavily on parametric models, which assume the data come from an underlying distribution that can be characterized by a finite number of parameters. 
-If these assumptions are correct, orcal property -- accurate estimates, precise preditcions and consistent variable selections \citep{fan2010selective} -- can be expected. 
+If these assumptions are correct, orcal property -- accurate estimates, precise preditcions and consistent variable selections \citep{Fan2010} -- can be expected. 
 However, given the increasing complexity of modern data, conclusions inferred under these restrictive assumptions can be misleading. 
-To handle this challenge, we focus on nonparametric methods, which directly conduct inference in infinite-dimensional spaces and thus are powerful enough to capture the subtleties in most modern applications.
+To handle this challenge, we focus on nonparametric methods, which directly conduct inference in infinite-dimensional spaces and thus are powerful enough to capture the subtleties in most modern applications. 
+
+We consider the problem of estimating the joint density of a continuous $d$-dimensional random vector 
+\begin{equation}
+    X=(X_1,\dots,X_d) \sim \mathcal{F}
+\end{equation}
+where F is the unknown distribution with the density function $f(x)$. 
+
+The objective is to estimate a function $\hat{f}(x)$ that best approximates $f(x)$ according to some criterion. 
+If the parametric form of the distribution is known, parametric density estimation methods can be applied. 
+However, in most real applications, it’s unlikely that the underlying distribution can be characterized by just a few parameters. 
+In these cases, nonparametric density estimation is preferred, as it makes fewer assumptions about the true density. 
+
+\subsection{Literature Review}
+
+\subsubsection{Classical KDE}
+The nonparametric density estimation problem has been the focus of a large body of research. 
+From a frequentist perspective, the most popular technique is Parzen and Rosenblatt’s kernel based method \citep{parzen1962estimation, rosenblatt1956remarks}, which uses flxed bandwidth local functions (e.g. Gaussians) to interpolate the multivariate density. 
+\cite{hjort1996locally, hjort1995nonparametric, loader1996local} independently developed the local likelihood method, which corrects the boundary bias for standard kernel density estimators. 
+Difierent adaptive bandwidth kernel density estimators were introduced by \cite{terrell1992variable,sain1996locally,staniswalis1989local}. 
+Bandwidth selection approaches for these density estimators include crossvalidation or some heuristic techniques. 
+These methods work very well for low-dimensional problems ($d \le 3$) but are not efiective for high-dimensional problems. 
+The major difficulty is due to the intractable computational cost of cross validation, when bandwidths need to be selected for each dimension, and the lack of theoretical guarantees for the other heuristics. 
+
+Methods of data-based optimal bandwidth calculation have also high computational demands. 
+Second order plug-in method \citep{sheather1991reliable}, which involves estimating second derivative of density function from given sample, is of $O(dn^2)$ complexity. 
+Also least squares cross-validation method (LSCV) \citep{rudemo1982empirical,bowman1984alternative}, where selecting optimal bandwidth is based on minimizing objective function g(h), has the same polynomial time complexity. 
+Few approximation techniques have been proposed to deal with the problem of time-consuming calculations of kernel density estimates. 
+The first of them, proposed by \cite{silverman1982algorithm}, uses fast Fourier transform (FFT). The other one applies Fast Gauss Transform (FGT) as suggested by \cite{elgammal2003efficient}. 
+An alternative to those methods could use parallel processing for obtaining density function estimates. 
+The pioneer paper in this subject is due to \cite{racine2002parallel}. 
+It proves the usability of parallel computations for kernel density estimation but covers in detail only the estimation itself. 
+Parallelization is done by dividing set of points where estimator is to be evaluated. 
+Each processor obtains the density function estimation for approximately pc points (where c denotes number of CPUs involved).  
+\cite{zheng2013quality} propose randomized and deterministic algorithms with quality guarantees which are orders of magnitude more efficient than previous algorithms, due to paralleled and distributed implementation. This algorithm can run on moderate dimensional data set.
+\cite{Lukasik2007} verify how parallel processing can be applied for kernel estimation, bandwidth selection and adaptation in a multicomputer environment using MPI (Message Passing Interface)\citep{snir1998mpi}. 
+
+What’s more, in a $d$-dimensional space, minimax theory shows that the best convergence rate for the mean squared error is $\mathcal{R}_{opt} = O(n^{-2k/(2k+d)})$. 
+For example, in a Sobolev space of order $k$, which represents the ``curse of dimensionality'' when d is large. 
+Instead of using local kernels, \cite{friedman1984projection} developed an exploratory projection pursuit approach which looks for ``interesting'' (e.g. non-Gaussian) low dimensional data projections to reveal the distribution pattern of the original data. 
+ \cite{stone1990large} proposed the Log-spline model to estimate log $f(x)$, while \cite{silverman1982estimation} developed penalized likelihood method for density estimation. 
+From a Bayesian perspective, \cite{escobar1995bayesian} proposed a Bayesian density estimation method for normal mixtures in the framework of mixtures of Dirichlet processes. 
+When the base distribution of the Dirichlet process is conjugate to the data likelihood, MCMC sampling can be derived for posterior inference. 
+However, for very high-dimensional problems, the computation is slow, representing another form of the curse of dimensionality in the Bayesian setting. 
+Therefore, for a very high-dimensional density estimation problem, it is desirable to somehow exploit low dimensional structure or sparsity in order to combat the curse of dimensionality and develop methods that are both computationally tractable and amenable to theoretical analysis.
+
+\subsubsection{Rodeo}
+Lafierty and Wasserman developed a nonparametric regression framework called rodeo \citep{wasserman2006rodeo}. 
+For the regression problem, $Y_i = m(X_i)+\epsilon_i$, $i = 1,\dot, n$, where $X_i = (X_{i1},\dots, X_{id}) \in R^d$ is a $d$-dimensional covariate. 
+Assuming that the true function only depends on $r$ covariates $r \ll d$, the rodeo can simultaneously perform bandwidth selection and (implicitly) variable selection to achieve a better minimax convergence rate of $O(n^{-4/(4+r)})$, as if the $r$ relevant variables were explicitly isolated in advance. 
+The purpose of this paper is to extend the idea of rodeo to the nonparametric density estimation setting. 
+Toward this goal, we need to first deflne an appropriate ``sparsity'' condition in the density estimation setting. 
+Assume that the variables are numbered such that the ``relevant'' dimensions correspond to $1 \le j \le r$ and the ``irrelevant'' dimensions correspond to $r + 1 \le j \le d$, one may first want to write $f(x) \propto f(x_1, \dots, x_r)$. 
+However, this is not a proper distribution on the irrelevant dimensions. 
+To make it well-deflned, we can assume, without loss of generality, that all dimensions have compact support $[0, 1]^d$, that is, $f(x) \propto f(x_1, \dots, x_r) \prod^d_{j=1} I\{0 \le x_j \le 1\}$. 
+In this case, we deem the uniform distribution as irrelevant (or, ``uninteresting'') dimensions, while the non-uniform distributions are relevant. 
+In fact, we can further generalize this deflnition. Our sparsity speciflcation is characterized by
+\begin{equation}\label{eq:rodeo2}
+    f(x) \propto g\left(x_{1}, \ldots, x_{r}\right) h(x) \quad \text { where } h_{j j}(x)=o(1) \text { for } j=1, \ldots, d.
+\end{equation}
+Thus, we assume that the density function $f(\cdot)$ can be factored into two parts: the relevant components $g(\cdot)$ and the irrelevant components $h(\cdot)$; $h_{jj}(x)$ is the second partial derivative of $h$ on the $j$-th dimension. 
+The constraint in expression \ref{eq:rodeo2} may look unnatural at the first sight, but it simply imposes a condition that $h(\cdot)$ belongs to a family of very smooth functions (e.g. the uniform distribution). 
+We adopt a standard setup where the function $f$ and dimension $d$ are allowed to vary with sample size $n$. 
+The motivation for such a deflnition comes from both realworld scenarios and the need for theoretical analysis. 
+Empirically, many problems have such a sparsity property; later in this paper, we will show an image processing example. 
+Theoretically, this definition is strong enough for us to prove our main theoretical results, showing that minimax rates in the efiective dimension r are achievable. 
+In fact, we can even generalize $h(\cdot)$ to other other distributions (e.g. Gaussian) to build a more general framework. 
+Later in this paper, we use Gaussian as a special case to illustrate this possibility.
+
+In this paper, based on the above deflned sparsity assumptions, we adapt the regression \emph{rodeo} framework to density estimation problems, referring to the resulting adaptive bandwidth density estimation method as the density rodeo. 
+Similar to rodeo for regression, the \emph{density rodeo} is built upon relatively simple and theoretically well understood nonparametric density estimation techniques, such as the kernel density estimator or local likelihood estimator, leading to methods that are simple to implement and can be used to solve very high dimensional problems. 
+As we present below, for any $\epsilon > 0$, the density rodeo achieves the near optimal convergence rate in the risk
+\begin{equation}
+    \mathcal{R}_{h^{*}}=O\left(n^{-4 /(4+r)+\epsilon}\right)
+\end{equation}
+Thus, it avoids the curse of apparent dimensionality $d$ by zeroing in on the efiective dimension $r \ll d$ by bandwidth selection. 
+Theoretical guarantees are provided even when $d$ is allowed to increase with $n$. 
+This work also illustrate the generality of the rodeo framework, showed that it is adaptable to a wide range of nonparametric inference problems. 
+Other recent work that achieves risk bounds for density estimation with a smaller efiective dimension is the minimum volume set learning method of \cite{scott2006learning}. 
+Based on a similar sparsity assumption, they provide theoretical guarantees for a technique that uses dyadic trees. 
+Another related work is done by \cite{gray2003very}, from a computational perspective, their dual-tree algorithm could also deal with large sample size and high dimensional problems $(d = 20 \sim 30)$. It would be a very interesting future work to compare the performance of density rodeo with their algorithm. 
+
+
+This paper is organized as follows, Section~\ref{sec:method} gives out the basic idea of density estimation rodeo. 
+In Section~\ref{sec:alg}, we derived the density estimation rodeo for both kernel density estimator and showed the drodeo algorithms. 
+Section~\ref{sec:theorem} specifles our main theoretical results about the asymptotic running time, selected bandwidths, and convergence rate of the risk. 
+Section~\ref{sec:sim} uses both synthetic and real-world dataset to test our method. 
+Finally, Section~\ref{sec:conclusion} summarizes the results. 

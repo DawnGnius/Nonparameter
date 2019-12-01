@@ -1,5 +1,12 @@
 \documentclass[twoside,11pt]{article}
 \usepackage{shortcuts}
+\usepackage{pstricks}
+\renewcommand{\P}{\mbox{$\mathbb{P}$}}
+\newcommand{\E}{\mbox{$\mathbb{E}$}}
+\newcommand{\V}{\mbox{$\mathbb{V}$}}
+\def\overdot#1{\mbox{\it\.{#1}}} 
+\newcommand{\LL}{h_{0}}
+\def\A{{\mathcal A}}
 
 \ShortHeadings{High-Dim KDE}{High-Dim KDE}
 
@@ -10,11 +17,16 @@
 \input{body/kdetitle.tex}
 
 \begin{abstract}
-Theory and Practice Casua\\
+  We consider the problem of estimating the joint density of a d-dimensional random vector $X = (X_1, X_2,\dots,X_d)$ when $d$ is large ($d \ge 3$). 
+  Classical nonparametric density estimation methods, such as kernel density estimation or local likelihood methods, fail in this case due to the exponentially increasing amount of data required and intractable computational cost of bandwidth selection. We reviewed some literature on nonparameter kernel density estimation method with large and high-dim data. 
+  In this essay, with a simple modiflcation of a previously developed nonparametric regression framework named rodeo (regularization of derivative expectation operator), we reviewed a computationally attractive alternative to perform high-dimensional density estimation. 
+  We empirically show that the density rodeo works well even for very high-dimensional problems in terms of both accuracy and efficiency. 
+  When the unknown density function satisfles some suitably deflned sparsity condition, our approach avoids the curse of dimensionality and achieves an optimal converge rate of the risk. 
+  Theoretical guarantees are provided even when the dimension is allowed to increase with sample size.\\
 \end{abstract}
 
 \begin{keywords}
-  Nonparametric density estimation, Sparsity, Adaptive bandwidth selection, High-dimensionality
+  Nonparametric density estimation, Sparsity, Adaptive bandwidth selection, High-dimensionality, Rodeo
 \end{keywords}
 
 \input{body/kdeintro.tex}
@@ -22,6 +34,6 @@ Theory and Practice Casua\\
 \input{body/kderodeo.tex}
 
 \vskip 0.2in
-\bibliography{kdelibrary}
+\bibliography{kdelibrary2}
 
 \end{document}
