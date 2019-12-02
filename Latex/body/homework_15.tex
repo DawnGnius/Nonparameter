@@ -12,12 +12,45 @@
 
 \begin{problem}[15.1]
     Solve the following optimization problem
-    \begin{equation}
-        \min_f RSS(f,\lambda)=\sum_{i=1}^nw_i(y_i-f(x_i))^2+\lambda\int \{f''(t)\}^2dt,
-    \end{equation}
+    \begin{equation*}
+        \min_f RSS(f,\lambda)= \sum_{i=1}^n w_i (y_i - f(x_i))^2 + \lambda \int \{f''(t)\}^2dt,
+    \end{equation*}
     where $w_i\ge 0$ are weighted value to observations. 
-    Use this conclusion to investigate the solution of the optimization problem of smooth splines when there are knots in the observation points (that is, there are duplicates in the data).
+    Use this conclusion to investigate the solution of the optimization problem of smooth splines when there are ties in the observation points (that is, there are duplicates in the data).
 \end{problem}
+
+\begin{solution}
+    We can choose a basis $\eta_1, \dots, \eta_n$ for the set of $k$th-order natural splines with knots over $x_1, \dots, x_n$, 
+    and reparametrize the problem into a finite-dimensional problem. 
+    Let $(\hat{f}(x_1), \dots, \hat{f}(x_n))^T = N \hat{\beta}$, where basis matrix $N$ from the B-spline basis with $N_{ij} = \eta_{j} (x_i)$. 
+    Then we can rewrite the equation as following
+    \begin{equation*}
+        \min_f RSS(f, \lambda) =  (y - N \beta)^T W (y - N \beta)  + \lambda \beta^T \Omega \beta,
+    \end{equation*}
+    where $W=diag(w_1, \dots, w_n)$, $y=(y_1, \dots, y_n)$, $\Omega$ is penalty matrices with $\Omega_{ij} = \int \eta_i''(x) \eta_j''(x) dx$. 
+
+    We can obtain
+    \begin{equation*}
+        \hat{\beta} = (N^T W N + \lambda \Omega)^{-1} W N^T y.
+    \end{equation*}
+
+    If there are ties within the data. Assume that there are $N_0$ distinct observations, and each observation $x_i$ appears $n_i$ times. 
+
+    Then, we can rewrite the optimization problem
+    \begin{equation*}
+        \begin{split}
+            \min_f RSS(f,\lambda) 
+            & = \sum_{i=1}^n w_i (y_i - f(x_i))^2 + \lambda \int \{f''(t)\}^2dt \\
+            & = \sum_{i=1}^{N_0} \sum_{j=1}^{n_i} w_i (y_{ij} - f(x_i))^2 + \lambda \int \{f''(t)\}^2dt \\
+            & = \sum_{i=1}^{N_0} \sum_{j=1}^{n_i} w_i (y_{ij}^2 - 2 y_{ij} f(x_i) + f(x_i)^2) + \lambda \int \{f''(t)\}^2dt \\
+            & = \sum_{i=1}^{N_0} n_i w_i \left( \overline{y_{i\cdot}^2} - 2 \overline{y_{i\cdot}} f(x_i) + f(x_i)^2 \right) + \lambda \int \{f''(t)\}^2dt . \\
+        \end{split}
+    \end{equation*}
+    Further, let $y_{new} = \left(\overline{y_{1\cdot}}, \cdots, \overline{y_{N_0}\cdot} \right)^T$, $W_{new}=diag(n_1 w_1, \dots, n_{N_0} w_{N_0})$ and 
+\end{solution}
+
+
+
 
 \begin{problem}[16.1]
     Consider the following regression model
