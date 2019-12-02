@@ -1,8 +1,8 @@
 \begin{problem}[15.1]
     Consider the following regression model
-    \begin{equation}
+    \begin{equation*}
         Y=f(X)+\epsilon,  f(X)=\frac{sin(12(X+0.2))}{X+0.2}
-    \end{equation}
+    \end{equation*}
     Let $X\sim U(0,1), \epsilon\sim N(0,1)$. Randomly generate $N=100$ samples $(x_i,y_i)$, 
 
     (1) Use smooth spline to fit the data set, and use CV to select the best turing parameters. 
@@ -29,24 +29,34 @@
     \end{equation*}
     where $W=diag(w_1, \dots, w_n)$, $y=(y_1, \dots, y_n)$, $\Omega$ is penalty matrices with $\Omega_{ij} = \int \eta_i''(x) \eta_j''(x) dx$. 
 
-    We can obtain
+    
     \begin{equation*}
-        \hat{\beta} = (N^T W N + \lambda \Omega)^{-1} W N^T y.
+        \frac{\partial RSS}{\partial \beta} = - 2 N^T W (y-N\beta) + 2 \lambda \Omega \beta
+    \end{equation*}
+    Let $\partial RSS/ \partial \beta = 0$, we can obtain
+    \begin{equation*}
+        \hat{\beta} = (N^T W N + \lambda \Omega)^{-1} N^T W y.
     \end{equation*}
 
-    If there are ties within the data. Assume that there are $N_0$ distinct observations, and each observation $x_i$ appears $n_i$ times. 
+    If there are ties within the data. Assume that there are $n_0$ distinct observations, and each observation $x_i$ appears $n_i$ times. 
 
     Then, we can rewrite the optimization problem
     \begin{equation*}
         \begin{split}
             \min_f RSS(f,\lambda) 
             & = \sum_{i=1}^n w_i (y_i - f(x_i))^2 + \lambda \int \{f''(t)\}^2dt \\
-            & = \sum_{i=1}^{N_0} \sum_{j=1}^{n_i} w_i (y_{ij} - f(x_i))^2 + \lambda \int \{f''(t)\}^2dt \\
-            & = \sum_{i=1}^{N_0} \sum_{j=1}^{n_i} w_i (y_{ij}^2 - 2 y_{ij} f(x_i) + f(x_i)^2) + \lambda \int \{f''(t)\}^2dt \\
-            & = \sum_{i=1}^{N_0} n_i w_i \left( \overline{y_{i\cdot}^2} - 2 \overline{y_{i\cdot}} f(x_i) + f(x_i)^2 \right) + \lambda \int \{f''(t)\}^2dt . \\
+            & = \sum_{i=1}^{n_0} \sum_{j=1}^{n_i} w_i (y_{ij} - f(x_i))^2 + \lambda \int \{f''(t)\}^2dt \\
+            & = \sum_{i=1}^{n_0} \sum_{j=1}^{n_i} w_i (y_{ij}^2 - 2 y_{ij} f(x_i) + f(x_i)^2) + \lambda \int \{f''(t)\}^2dt \\
+            & = \sum_{i=1}^{n_0} n_i w_i \left( \overline{y_{i\cdot}^2} - 2 \overline{y_{i\cdot}} f(x_i) + f(x_i)^2 \right) + \lambda \int \{f''(t)\}^2dt . \\
+            & = \sum_{i=1}^{n_0} n_i w_i \left( \overline{y_{i\cdot}}^2 - 2 \overline{y_{i\cdot}} f(x_i) + f(x_i)^2 \right) - \sum_{i=1}^{n_0} \sum_{j\neq k} y_{ij} y_{ik} + \lambda \int \{f''(t)\}^2dt . \\
+            & \text{(the second term is ignored)} \\
+            & = \sum_{i=1}^{n_0} n_i w_i \left( \overline{y_{i\cdot}}^2 - 2 \overline{y_{i\cdot}} f(x_i) + f(x_i)^2 \right) + \lambda \int \{f''(t)\}^2dt . \\
         \end{split}
     \end{equation*}
-    Further, let $y_{new} = \left(\overline{y_{1\cdot}}, \cdots, \overline{y_{N_0}\cdot} \right)^T$, $W_{new}=diag(n_1 w_1, \dots, n_{N_0} w_{N_0})$ and 
+    Further, let $y_{new} = \left(\overline{y_{1\cdot}}, \cdots, \overline{y_{n_0}\cdot} \right)^T$, $W_{new}=diag(n_1 w_1, \dots, n_{n_0} w_{n_0})$, $N_{ij} = \eta_j (x_i)$ for $i=1,\dots, n_0$ and we can obtain
+    \begin{equation*}
+        \hat{\beta}_{ties} = (N^T W_{new} N + \lambda \Omega )^{-1} N^T  W_{new} y_{new}.
+    \end{equation*}
 \end{solution}
 
 
@@ -57,10 +67,66 @@
     \begin{equation*}
         y_i=f(x_i)+e_i,i=1,\ldots,n.
     \end{equation*}
-    Let $N_j(x), j=1,\ldots,n$ be the basis of order $3$ nature spline, $f(x)=\sum_{j=1}^nN_j(x)\beta_j$ and $\Omega=(\Omega_{jk}), \Omega_{jk}=\int N''_jN''_k(t)dt$.
-    (1) Let $S_\lambda=N(N^TN+\lambda\Omega)^{-1}N^T$, prove
+    Let $N_j(x), j=1,\ldots,n$ be the basis of cubic nature spline, $f(x)=\sum_{j=1}^nN_j(x)\beta_j$ and $\Omega=(\Omega_{jk}), \Omega_{jk}=\int N''_jN''_k(t)dt$.
+    
+    (1) Obtain the estimation of $\beta = (\beta_1, \dots, \beta_n )$ using smooth spline method.
+    
+    (2)Let $S_\lambda=N(N^TN+\lambda\Omega)^{-1}N^T$, prove
     \begin{equation*}
-        CV(\lambda)=\frac1n\sum_{i=1}^n\Big(y_i-\hat{f}^{(-i)}(x_i)\Big)^2=\frac1n\sum_{i=1}^n\Big[\frac{y_i-\hat{f}(x_i)}{1-S_\lambda(i,i)}\Big]^2.
+        CV(\lambda)=\frac1n\sum_{i=1}^n\Big(y_i-\hat{f}^{(-i)}(x_i)\Big)^2 = \frac1n\sum_{i=1}^n\Big[\frac{y_i-\hat{f}(x_i)}{1-S_\lambda(i,i)}\Big]^2.
     \end{equation*}
     where $\hat{f}^{(-i)}(x_i)$ represents the estimation of $f$ at $x_i$ with removing $i$-th sample.
 \end{problem}
+
+\begin{solution}
+    (1) Let $\hat{\beta}$ be the minimizer of the OLS, there are $n$ different observations and $n$ variables, 
+    \begin{equation*}
+        \frac{1}{n} \|y - N \beta \|^2
+    \end{equation*}
+    Then we have $\hat{\beta} =  (N^T N)^{-1} N^T y$.
+
+    (2) Let $\hat{f}^{(-i)}$ be the minimizer of the PLS based on all observations except $(x_i, y_i)$
+    \begin{equation*}
+        \frac{1}{n} \sum_{j \neq i}\left(y_{j}-\mathcal{L}_{j} f\right)^{2}+\lambda\left\|P_{1} f\right\|^{2}
+    \end{equation*}
+
+    For any fixed $i$, $\hat{\beta}^{-i}$ is the minimizer of
+    \begin{equation*}
+        \frac{1}{n}\left(\mathcal{L}_{i} \hat{f}^{-(i)}-\mathcal{L}_{i} f\right)^{2}+\frac{1}{n} \sum_{j \neq i}\left(y_{j}-\mathcal{L}_{j} f\right)^{2}+\lambda\left\|P_{1} f\right\|^{2}
+    \end{equation*}
+    because for any function $f$, we have
+    \begin{equation*}
+    \begin{split} 
+        & \frac{1}{n}\left(\mathcal{L}_{i} \hat{f}^{-(i)}-\mathcal{L}_{i} f\right)^{2}+\frac{1}{n} \sum_{j \neq i}\left(y_{j}-\mathcal{L}_{i} f\right)^{2}+\lambda\left\|P_{1} f\right\|^{2} \\ 
+        & \geq \frac{1}{n} \sum_{j \neq i}\left(y_{j}-\mathcal{L}_{i} f\right)^{2}+\lambda\left\|P_{1} f\right\|^{2} \\ 
+        & \geq \frac{1}{n} \sum_{j \neq i}\left(y_{j}-\mathcal{L}_{j} \hat{f}^{-(i)}\right)^{2}+\lambda\left\|P_{1} \hat{f}^{-(i)}\right\|^{2} \\
+        & = \frac{1}{n}\left(\mathcal{L}_{i} \hat{f}^{-(i)}-\mathcal{L}_{i} \hat{f}^{-(i)}\right)^{2}+\frac{1}{n} \sum_{j \neq i}\left(y_{j}-\mathcal{L}_{j} \hat{f}^{-(i)}\right)^{2}+\lambda\left\|P_{1} \hat{f}^{-(i)}\right\|^{2} 
+    \end{split}
+    \end{equation*}
+    It indicates that the solution to the PLS without the $i$th observation, $\hat{f}^{(-i)}$, is also the solution to the OLS with the $i$th observation $(x_i, y_i)$ being replaced by the fitted value $\mathcal{L}_{i} \hat{f}^{-(i)}$. 
+
+    Note that the hat matrix $S_\lambda$ depends on the model space and operators $\mathcal{L}_{i}$ only. 
+    It does not depend on observations of the dependent variable. 
+    Therefore, $\hat{f} = S_\lambda y$ and $\hat{f}^{(-i)} = S_\lambda y^{-i}$. 
+    \begin{equation*}
+    \begin{split} 
+        \mathcal{L}_{i} \hat{f} & = \sum_{j=1}^{n} S_\lambda(i, j) y_{j} \\ 
+        \mathcal{L}_{i} \hat{f}^{-(i)} & = \sum_{j \neq i} S_\lambda(i, j) y_{j}+ S_\lambda(i, i) \mathcal{L}_{i} \hat{f}^{-(i)}
+     \end{split}
+    \end{equation*}
+    Solving for $\mathcal{L}_{i} \hat{f}^{(-i)}$, we have
+    \begin{equation*}
+        \mathcal{L}_{i} \hat{f}^{-(i)}=\frac{\mathcal{L}_{i} \hat{f} - S_\lambda(i, i) y_{i}}{1-S_\lambda(i, i)}
+    \end{equation*}
+
+    Then 
+    \begin{equation*}
+        y_i-\hat{f}^{(-i)}(x_i) = \frac{y_i-\hat{f}(x_i)}{1-S_\lambda(i,i)}
+    \end{equation*}
+    and 
+    \begin{equation*}
+        CV(\lambda)=\frac1n\sum_{i=1}^n\Big(y_i-\hat{f}^{(-i)}(x_i)\Big)^2 = \frac1n\sum_{i=1}^n\Big[\frac{y_i-\hat{f}(x_i)}{1-S_\lambda(i,i)}\Big]^2.
+    \end{equation*}
+\end{solution}
+
+I don't understand the last question, please help me. 

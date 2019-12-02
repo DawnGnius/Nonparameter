@@ -1,0 +1,69 @@
+---
+title: "Homeword 15"
+author: "Liu Huihang"
+date: "12/2/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 14.2
+
+Consider the following regression model
+    \begin{equation*}
+        Y=f(X)+\epsilon,  f(X)=\frac{sin(12(X+0.2))}{X+0.2}
+    \end{equation*}
+    Let $X\sim U(0,1), \epsilon\sim N(0,1)$. Randomly generate $N=100$ samples $(x_i,y_i)$, 
+
+    (1) Use smooth spline to fit the data set, and use CV to select the best turing parameters. 
+
+    (2) Draw the fitted curve and real curve under different degrees of freedom $df(5,9,15)$, with point-by-point confidence band.
+
+## Answer
+```{r, warning=FALSE, message=FALSE}
+require(splines)                            # for smooth.spline
+
+# data preparation
+set.seed(1314)
+f <-function(x) sin(12*(x+0.2))/(x+0.2)
+n <- 200
+x <- runif(n,0,1)
+e <- rnorm(n,0,1)
+y <- f(x) + e
+
+# smoothing splines and CV
+ll <- seq(0.2, 1.5, by=0.01)
+cv <- 1:length(ll)
+for (i in 1:length(ll)){
+  fit <- smooth.spline(x, y, spar=ll[i])
+  l <- fit$lev[match(x, fit$x)]
+  yhat <- predict(fit, x)$y
+  cv[i] <- mean(((y - yhat)/(1-l))^2)       # CV equation in slide, HW15
+}
+cat("Optimal smoothing parameter is", ll[which.min(cv)], "\n")
+```
+
+Next we draw different fitted curve and real curve under different degrees of freedom $df(5,9,15)$, with point-by-point confidence band. 
+
+Black dash lines are real curves, blue solid lines are fitted curves, and green bands are confidence band. 
+```{r, warning=FALSE}
+# loop for df
+df <- c(5, 9, 15)
+xx <- seq(min(x), max(x), length = 101)
+for (df.loop in df) {
+  plot(x, y)
+  title(paste('df =', df.loop))
+  lines(xx, f(xx), lwd=2, col=1, lty=2)
+  fit <- lm(y~ ns(x,df=df.loop, intercept = TRUE))
+  yy <- predict(fit, newdata=data.frame(x=xx), se.fit=TRUE)
+  # confidence band with 3 sd
+  polygon(c(xx, rev(xx)), c(yy$fit-3*yy$se.fit, rev(yy$fit+3*yy$se.fit)), col=rgb(0.5,0.5,0,alpha=.3), border=F)
+  lines(xx, predict(fit, data.frame(x=xx)), col= "blue",lwd=2)
+}
+```
+
+
+We can find that the larger the $df$ the less smoothness of fitted curve is. And the estimated result is highly depend on the choosing of $df$. 
+In this situation, we should choose $df=9$, it fits pretty well with moderate sample size. 
