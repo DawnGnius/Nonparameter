@@ -1,0 +1,33 @@
+\begin{problem}[17.1]
+    The objective in this exercise is to estimate the production function for China’s nongovernmental businesses for the Year 2003. 
+    The data include 2052 valid observations on $7$ variables: Output, capital, Labor, Province, Ownership, Industry, and List,  where the first three variables are self-defined, and the other variables are categorical variables (for example, List = 1 if a business is a listed company, 0 otherwise). 
+    Please use the dataset (Business03.txt) to answer the following questions:
+    
+    (1) Run a multiple linear regression (MLR) model by regressing ln(Output) on a constant term, ln(Capital) and ln(Labor) :
+    \begin{equation*}
+        Y = m(X_1, X_2) + u
+    \end{equation*}
+    where $Y=ln(Output)$, $X_1=ln(Capital)$, and $X2=ln(Labor)$, and $u$ is the disturbance term. Report the regression results in the standard format. That is, you need to report the regression model, the $t$-values, or the $p$-values or the corresponding standard errors for the coefficients in the model, $R^2$, $\bar{R}^2$ (Adjusted $R^2$), and the $F$ test statistic or its corresponding $p$-value.
+
+    (2) Run a nonparametric regression model by regressing $ln(Output)$ on $ln(Labor)$ and $ln(Labor)$ by using the local constant procedure
+    \begin{equation*}
+        Y = m(X_1, X_2) + u
+    \end{equation*}
+
+    Denote the regression estimates by $\hat{m}_{lc}(x_1,x_2).$. Calculate the $R^2$ based upon the formula
+    \begin{equation*}
+        R^2=\frac{[\sum_{i=1}^n(Y_i-\bar{Y})(\hat{Y}_i-\bar{\hat{Y}}]^2}{\sum_{i=1}^n(Y_i-\bar{Y})^2\sum_{i=1}^n(\hat{Y}_i-\bar{\hat{Y}})^2},
+    \end{equation*}
+    which is the squre of the sample correlation between $Y_i$ and $\hat{Y}_i$, where $\hat{Y}_i=\hat{m}_{lc}(X_{1i},X_{2i})$ is the insample predict value for $Y_i$,
+    $\bar{Y}=\frac1n\sum_{i=1}^nY_i$, and $\bar{\hat{Y}}=\frac1n\sum_{i=1}^n\hat{Y}_i$. 
+    Plot $\hat{Y}$ against $X_1$ and $X_2$ in a three-dimensional diagrm.
+    Does the diagram lend any support to the MLR model in part (1)?
+
+    (3) Repeat part (2) by using the local linear procedure. 
+
+    (4) Test the correct specification of the model in part (1) using \emph{np package}.
+\end{problem}
+
+\begin{solution}
+    See RMarkdown file for detial. 
+\end{solution}
