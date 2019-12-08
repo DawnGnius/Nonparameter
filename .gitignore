@@ -16,3 +16,5 @@ Latex/Ref/
 R/Essay 1/mnist/t10k-images.idx3-ubyte
 R/Essay 1/mnist/
 R/Essay 1/usps/usps.h5
+*.Rhistory
+*.zip
