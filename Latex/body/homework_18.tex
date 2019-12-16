@@ -1,0 +1,77 @@
+\begin{problem}[18.1]
+    Find the the asymptotic distributions of the local linear estimators (36) and (37) in Slide 18.
+\end{problem}
+
+\begin{solution}
+    Equation (36):
+    \begin{equation}
+        \hat{\beta}_{l l} = \left[(X-S X)^{\prime}(X-S X)\right]^{-1}(X-S X)^{\prime}(Y-S Y)
+    \end{equation}
+
+    Equation (37):
+    \begin{equation}
+        \hat{\alpha}_{l l} (z) = \alpha_{\hat{\beta}}(z) = S(z) (Y- X\hat{\beta_{ll}})
+    \end{equation}
+
+    A semiparametric partially linear model is given by
+    \begin{equation*}
+        Y_i = X_i^\prime \beta_0 + g(Z_i) + \mu_i,\quad i=1,\dots,n.
+    \end{equation*}
+    Equation (36) and (37) can be achieved by using local linear approximation to improve the result of local constant approximation with smoother operator
+    \begin{equation*}
+        S(z) = \left[ \tilde{Z}_z^\prime W_z \tilde{Z}_z \right]^{-1} \tilde{Z}_z^\prime W_z,
+    \end{equation*}
+    and
+    \begin{equation*}
+        \tilde{Z}_z = \left(
+            \begin{matrix}
+                1 & (Z_1 -z)^\prime \\
+                1 & (Z_2 -z)^\prime \\
+                \multicolumn{2}{c}{$\vdots$}     \\
+                1 & (Z_n -z)^\prime \\
+            \end{matrix}
+        \right)
+    \end{equation*}
+    and $W_z = diag \left(K_h (Z_1 - z), K_h (Z_2 - z),\dots, K_h (Z_n - z) \right)$.
+
+    \begin{equation*}
+        \begin{split}
+            \hat{\beta}_{l l} - \beta_0 
+            & = \left[(X-S X)^{\prime}(X-S X)\right]^{-1} (X-S X)^{\prime} [ Y - S Y - (X - S X)\beta_0] \\
+            & = \left[ X^\prime (I-S)^\prime (I-S) X \right]^{-1} X^\prime (I-S)^\prime (I-S) ( Y - X\beta_0) \\ 
+            & = \left[ X^\prime (I-S)^\prime (I-S) X \right]^{-1} X^\prime (I-S)^\prime (I-S) \left[g(Z) + \mu\right]
+        \end{split}
+    \end{equation*}
+
+    Let $A= (I-S)^\prime (I-S)$, then
+    \begin{equation*}
+        \begin{split}
+            \hat{\beta}_{l l} - \beta_0  
+            & = \left[ X^\prime A X \right]^{-1} X^\prime A \left[g(Z) + \mu\right] \\
+            & = \underbrace{\left[ X^\prime A X \right]^{-1} X^\prime A g(Z)}_{Bias} +  \underbrace{\left[ X^\prime A X \right]^{-1} X^\prime A \mu}_{Variance} \\
+        \end{split}
+    \end{equation*}
+
+    \begin{equation*}
+        E \left[\hat{\beta}_{l l} - \beta_0  \right] = \left[ X^\prime A X \right]^{-1} X^\prime A g(Z) \triangleq Bias
+    \end{equation*}
+    and
+    \begin{equation*}
+        Var \left[\hat{\beta}_{l l} - \beta_0  \right] = \left[ X^\prime A X \right]^{-1} X^\prime A \Sigma A^\prime X \left[ X^\prime A  X \right]^{-1} \triangleq Var
+    \end{equation*}
+    where $\Sigma = \diag(\sigma^2(X_1, Z_1), \dots, \sigma^2(X_n, Z_n))$.
+
+    Thus we have
+    \begin{equation*}
+        \hat{\beta}_{l l} - \beta_0  \leadsto N\left( Bias, Var \right).
+    \end{equation*}
+    
+    According to $\alpha_{0}(z)=S(z)\left(Y-X \beta_{0}\right)$, we have
+    \begin{equation*}
+        \begin{split}
+            \hat{\alpha}_{l l} (z) - \alpha_{0}(z) 
+            & = - S(z)(\hat{\beta}_{ll} -\beta_0) \\
+            & \leadsto N \left( -S(z) Bias, S(z) Var S(z)^\prime \right).
+        \end{split}
+    \end{equation*}
+\end{solution}
